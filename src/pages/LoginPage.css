@@ -1,0 +1,33 @@
+.bg-image {
+  background-image: url("../assets/bg1.jpeg");
+  background-position: bottom center;
+  background-size: cover;
+  filter: brightness(25%);
+  position: absolute;
+  background-repeat: no-repeat;
+}
+.bg {
+  background: rgb(163, 0, 0);
+  background: linear-gradient(
+    135deg,
+    rgba(163, 0, 0, 0.6223739495798319) 0%,
+    rgba(99, 99, 99, 0.468312324929972) 100%
+  );
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+  z-index: 10;
+
+}
+.btn {
+  padding: 8px 0;
+  margin-top: 2rem;
+  background-color: rgba(239 68 68);
+  border-radius: 10px;
+  color: white;
+  font-size: medium;
+}
+.btn:hover {
+  background-color: rgb(220 38 38);
+  transition: all 0.4s ease;
+}
