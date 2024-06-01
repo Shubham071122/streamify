@@ -42,7 +42,7 @@ function LandingPage() {
                 to="/register"
                 className="text-[18px] px-3 py-2 bg-red-500 rounded-md hover:bg-red-600 hover:transition-all 0.4s ease"
               >
-                Create new account
+                Create account
               </NavLink>
             </div>
           </nav>
