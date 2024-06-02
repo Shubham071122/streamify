@@ -22,7 +22,7 @@ const LoginPage = () => {
     try {
       const data = await login(credentials);
       console.log("Login successful:", data);
-      navigate("/home");
+      navigate("/");
     } catch (error) {
       setError("Login failed. Please check your credentials and try again.");
     }
