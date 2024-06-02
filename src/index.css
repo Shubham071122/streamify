@@ -7,13 +7,13 @@
 
 :root{
     font-family: "Roboto", sans-serif;
-    background-color: rgb(66, 64, 64);
+    background-color: rgb(30, 0, 0);
+    /* background-color: rgb(157, 131, 184); */
 }
 
 .landing-page-bg{
     background-image: url(../src/assets/bg.webp);
     background-position: center;
     object-fit: cover;
-    /* filter: blu; */
     filter: brightness(25%);
 }

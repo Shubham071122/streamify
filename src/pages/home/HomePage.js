@@ -1,14 +1,14 @@
-import React, { useContext } from 'react'
-import AuthContext from '../../context/AuthContext'
+import React from 'react';
+import Home from '../../components/home/Home'
+import { PageProvider } from '../../context/PageContext';
 
 function HomePage() {
-    const {user,logout} = useContext(AuthContext);
 
   return (
     <div>
-        <h1>HomePage</h1>
-        <p>Welcome, {user?.fullName}</p>
-        <button onClick={logout}>Logout</button>
+      <PageProvider>
+        <Home/>
+      </PageProvider>
     </div>
   )
 }

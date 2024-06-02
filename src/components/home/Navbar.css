@@ -1,0 +1,8 @@
+.nav-shadow{
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+    z-index: 10;
+}
+.bg{
+    background:rgb(147, 51, 234);
+background: linear-gradient(135deg, rgba(98, 61, 130, 0.816) 13%, rgba(154, 78, 220, 0.919) 84%);
+}

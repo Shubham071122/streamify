@@ -1,0 +1,16 @@
+.bg{
+    background:rgb(147, 51, 234);
+background: linear-gradient(135deg, rgba(98, 61, 130, 0.816) 13%, rgba(154, 78, 220, 0.919) 84%);
+}
+.menu{
+    
+    transition: background-color 0.1s ease-out;
+}
+.menu:hover{
+    background-color: rgb(240, 93, 93);
+    /* background-color: rgb(92, 38, 139); */
+    transition: all 0.4s ease;
+}
+.menu-active {
+    background-color: rgb(240, 93, 93);
+}
