@@ -22,8 +22,9 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     try {
+      console.log("Process:", process.env.REACT_APP_SERVER_URL);
       const response = await axios.post(
-        `${process.env.SERVER_URL}/users/login`,
+        `${process.env.REACT_APP_SERVER_URL}/users/login`,
         credentials
       );
 
@@ -42,7 +43,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (formData) => {
     try {
       const response = await axios.post(
-        `${process.env.SERVER_URL}/users/register`,
+        `${process.env.REACT_APP_SERVER_URL}/users/register`,
         formData,
         {
           headers: {

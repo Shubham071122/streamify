@@ -12,11 +12,14 @@ function Home() {
       setLoading(true);
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch(`${process.env.SERVER_URL}/videos/`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          `${process.env.REACT_APP_SERVER_URL}/videos/`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         // console.log(response);
         if (!response.ok) {
           throw new Error("Network response was not ok");

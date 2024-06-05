@@ -14,7 +14,7 @@ function Navbar() {
       try {
         const token = localStorage.getItem('token');
         const response = await fetch(
-          `${process.env.SERVER_URL}/users/current-user`,
+          `${process.env.REACT_APP_SERVER_URL}/users/current-user`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
