@@ -5,7 +5,7 @@
 .menu:hover{
     background-color: rgb(240, 93, 93);
     /* background-color: rgb(92, 38, 139); */
-    transition: all 0.4s ease;
+    transition: all 0.2s ease
 }
 .menu-active {
     background-color: rgb(240, 93, 93);
