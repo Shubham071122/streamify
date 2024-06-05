@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 function Video({ video }) {
   console.log("video:", video);
   return (
-    <NavLink to="/video">
+    <NavLink to={`/video/${video._id}`} state={{ video }}>
       <div className="w-[370px] h-[300px] border-[1px] rounded-md video-hover bg-red-800 mb-14">
         {/* TOP */}
         <div className="w-full h-[200px]">
@@ -34,8 +34,10 @@ function Video({ video }) {
                 ? `${video.title.substring(0, 50)}...`
                 : video.title}
             </p>
-            <NavLink >
-              <p className="text-gray-400 text-sm hover:text-white transition-all 0.2s ease">{video.owner.fullName}</p>
+            <NavLink>
+              <p className="text-gray-400 text-sm hover:text-white transition-all 0.2s ease">
+                {video.owner.fullName}
+              </p>
             </NavLink>
             <p></p>
           </div>

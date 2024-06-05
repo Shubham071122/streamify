@@ -12,7 +12,7 @@ function Home() {
       setLoading(true);
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch("http://localhost:8000/api/v1/videos/", {
+        const response = await fetch(`${process.env.SERVER_URL}/videos/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -37,6 +37,7 @@ function Home() {
   if(loading){
     return <Loader/>
   }
+  console.log("videosss:",videos);
 
   return (
     <div className="w-full h-screen flex justify-between px-14 py-14 flex-wrap">

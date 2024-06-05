@@ -14,7 +14,7 @@ function Navbar() {
       try {
         const token = localStorage.getItem('token');
         const response = await fetch(
-          "http://localhost:8000/api/v1/users/current-user",
+          `${process.env.SERVER_URL}/users/current-user`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -34,7 +34,7 @@ function Navbar() {
   },[])
 
   return (
-    <div className="w-full flex items-center justify-between py-2 px-10  bg-red-900 nav-shadow">
+    <div className="w-full flex items-center justify-between py-[.5px] px-10  bg-red-900 nav-shadow">
       <div className="-ml-6">
         <img src={logo} alt="" width="250px" />
       </div>

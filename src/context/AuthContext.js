@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/users/login",
+        `${process.env.SERVER_URL}/users/login`,
         credentials
       );
 
@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (formData) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/users/register",
+        `${process.env.SERVER_URL}/users/register`,
         formData,
         {
           headers: {
