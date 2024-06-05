@@ -12,7 +12,7 @@ function LandingPage() {
   const backgroundImage = `url(${require("../assets/bg1.jpeg")})`;
   const [isLogin,setIsLogin] = useState(false);
   return (
-    <div className="w-full h-screen text-white">
+    <div className="w-full h-screen text-white bg-black">
       {/* HERO BANNER */}
       <div>
         <div

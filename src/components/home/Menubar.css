@@ -1,7 +1,3 @@
-.bg{
-    background:rgb(147, 51, 234);
-background: linear-gradient(135deg, rgba(98, 61, 130, 0.816) 13%, rgba(154, 78, 220, 0.919) 84%);
-}
 .menu{
     
     transition: background-color 0.1s ease-out;
