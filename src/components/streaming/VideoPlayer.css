@@ -1,0 +1,9 @@
+.shad.box{
+    --shadow-color: hsl(219, 16%, 79%);
+  
+}
+.box {
+    filter: drop-shadow(
+      1px 2px 12px var(--shadow-color)
+    );
+}

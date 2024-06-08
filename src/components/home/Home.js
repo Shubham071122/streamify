@@ -15,6 +15,7 @@ function Home() {
         const response = await fetch(
           `${process.env.REACT_APP_SERVER_URL}/videos/`,
           {
+            method:"GET",
             headers: {
               Authorization: `Bearer ${token}`,
             },
