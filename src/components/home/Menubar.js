@@ -7,11 +7,16 @@ import { MdOutlineSubscriptions } from "react-icons/md";
 import { RiPlayList2Line } from "react-icons/ri";
 import { IoMdHelpCircleOutline } from "react-icons/io";
 import { LuHistory } from "react-icons/lu";
+import { MdLogout } from "react-icons/md";
+import { useContext } from 'react';
+import AuthContext from '../../context/AuthContext';
 
 
 function Menubar() {
+  const { logout } = useContext(AuthContext);
   return (
-    <div className="w-2/12 h-screen bg-red-800 ">
+    <div className="w-2/12 h-full bg-red-800 ">
+    <div className='w-full h-full flex flex-col items-center justify-between'>
       <div className=" flex flex-col items-start mt-14 mx-4">
         <NavLink
           to="/"
@@ -97,6 +102,14 @@ function Menubar() {
           <p>About</p>
         </NavLink>
       </div>
+      <div className='px-4 py-5'>
+        
+        <button onClick={logout} className='text-white text-lg px-4 py-2 bg-orange-500 rounded-md hover:bg-orange-600 hover:transition-all 0.2s ease-in-out flex items-center w-full justify-center'>
+          <p className='mr-3'><MdLogout/></p>
+          <p>Logout</p>
+        </button>
+      </div>
+    </div>
     </div>
   );
 }
