@@ -1,0 +1,35 @@
+/* Custom scrollbar for WebKit-based browsers */
+.comment-section::-webkit-scrollbar {
+    width: 12px;
+    border-radius: 50%;
+  }
+  
+  .comment-section::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border: 1px solid #d4d4d4;
+  }
+  
+  .comment-section::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+    border: 2px solid #f1f1f1;
+  }
+  
+  .comment-section::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  
+  /* Custom scrollbar for Firefox */
+  .comment-section {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+  }
+  
+  /* Ensure the comment section is scrollable */
+  /* .comment-section {
+    max-height: 570px; Adjust as needed */
+    /* overflow-y: auto;
+    border: 1px solid #ccc;
+    background-color: #fff;
+  } */
+  
