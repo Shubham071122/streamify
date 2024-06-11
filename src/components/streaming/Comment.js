@@ -7,10 +7,13 @@ import { IoSend } from "react-icons/io5";
 function Comment({ videoId }) {
   const [comments, setComments] = useState([]);
   const [commentMsg, setCommentMsg] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [editingCommentId, setEditingCommentId] = useState(null);
 
   //fetching userId form local storage.
   const currentUserId = localStorage.getItem("userId");
-  console.log("currentUserId:",currentUserId)
+  // console.log("currentUserId:",currentUserId)
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -27,10 +30,15 @@ function Comment({ videoId }) {
 
         const data = response.data.message.comments;
         console.log("comment data:", data);
-        setComments(data);
+        if (Array.isArray(data)) {
+          setComments(data);
+        } else {
+          console.error("Invalid comment data:", data);
+          setError("Invalid comment data");
+        }
       } catch (error) {
         console.log("Error while fetching comments:", error);
-        // setErrors(error.message);
+        setError(error.message);
       }
     };
     fetchComments();
@@ -39,10 +47,19 @@ function Comment({ videoId }) {
   const handleChange = (e) => {
     setCommentMsg(e.target.value)
   }
+  // handleEditClick
+  const handleEditClick = (comment) => {
+    setCommentMsg(comment.comment); 
+    setEditingCommentId(comment._id);
+  };
 
+  //* POST COMMENT:---
   const postComment = async(e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
+
+    setLoading(true); // Start loading
+    setError(""); // Clear previous errors
 
     try {
       const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/comments/${videoId}`,
@@ -56,16 +73,40 @@ function Comment({ videoId }) {
         }
       );
   
-      console.log("REsponse:",response);
-       // Update comments state to reflect the new comment
-       setComments([...comments, response.data.message.comments]);
-       setCommentMsg(""); // Clear the input field
+      console.log("Response:",response);
+      console.log("Response:",response.data.data.content);
 
-  
+      if (response.data.data && response.data.data.content) {
+        // Fetch updated comments from server
+        const updatedResponse = await axios.get(
+          `${process.env.REACT_APP_SERVER_URL}/comments/${videoId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const updatedData = updatedResponse.data.message.comments;
+        console.log("updatedData:",updatedData);
+        if (Array.isArray(updatedData)) {
+          setComments(updatedData);
+        } else {
+          console.error("Invalid updated comment data:", updatedData);
+          setError("Invalid updated comment data");
+        }
+      } else {
+        console.error("Unexpected response structure:", response.data);
+        setError("Unexpected response structure");
+      }
     } catch (error) {
-      console.log("Error while posting comment:",error.message);
-
+      console.log("Error while posting comment:", error.message);
+      setError("Error while posting comment");
+    } finally {
+      setLoading(false); // Stop loading
+      setCommentMsg(""); // Clear the input field
     }
+
 
   }
 
@@ -78,15 +119,23 @@ function Comment({ videoId }) {
       <div className="w-full h-full px-3 py-3 flex flex-col overflow-y-auto comment-section grow">
         {
         comments && comments.length > 0 ? (
-            comments.map((comment) => {
-              // Ensure comment object is valid
-              if (comment && comment._id) {
-                return <CommentMsg comment={comment} key={comment._id} currentUserId={currentUserId} comments={comments} setComments={setComments}/>;
-              } else {
-                console.error("Invalid comment object:", comment);
-                return null;
-              }
-            })
+          comments.map((comment) => {
+            // Ensure comment object is valid
+            if (comment && comment._id) {
+              return (
+                <CommentMsg
+                  comment={comment}
+                  key={comment._id}
+                  currentUserId={currentUserId}
+                  comments={comments}
+                  setComments={setComments}
+                />
+              );
+            } else {
+              console.error("Invalid comment object:", comment);
+              return null;
+            }
+          })
         ) : (
           <div className="w-full h-full items-center justify-center flex-col">
             <p>Comment not found</p>
@@ -106,6 +155,8 @@ function Comment({ videoId }) {
         />
         <button type="submit" className="pl-3 py-3 text-red-600 text-xl hover:translate-x-1 hover:scale-110 hover:transition-all 0.4s ease-in"><IoSend/></button>
       </form>
+      {loading && <div className="loading-spinner">Posting comment...</div>} {/* Add a loader */}
+      {error && <div className="error-message">{error}</div>} {/* Display error */}
     </div>
   );
 }

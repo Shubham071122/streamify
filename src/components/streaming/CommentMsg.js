@@ -7,7 +7,7 @@ function CommentMsg({ comment, currentUserId, comments, setComments }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
-  const [isEditMode,setIsEditMode] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
   const [updatedContent, setUpdatedContent] = useState(comment.content);
 
   //** Handeling outside click */
@@ -18,10 +18,10 @@ function CommentMsg({ comment, currentUserId, comments, setComments }) {
       }
     };
 
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
 
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener("click", handleClickOutside);
     };
   }, []);
 
@@ -38,51 +38,63 @@ function CommentMsg({ comment, currentUserId, comments, setComments }) {
   const handleReadMore = () => {
     setIsExpanded(!isExpanded);
   };
-//** Toggle menu */
+  //** Toggle menu */
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
   //** Update
-  const handleUpdate = async () => {
-    const token = localStorage.getItem("toke")
+  const handleUpdate = () => {
     // Toggle edit mode
     setIsEditMode(!isEditMode);
-  
+  };
+
+  const saveUpdate = async () => {
+    const token = localStorage.getItem("token");
+
     // If exiting edit mode, submit update to server
-    if (!isEditMode) {
-      try {
-        const response = await axios.patch(
-          `${process.env.REACT_APP_SERVER_URL}/comments/u/${comment._id}`,
-          { content: updatedContent },
-          
+    try {
+      const response = await axios.patch(
+        `${process.env.REACT_APP_SERVER_URL}/comments/u/${comment._id}`,
+        { comment: updatedContent },
         {
-          headers:{
-            Authorization:`Bearer ${token}`
-          }
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-        );
-        console.log("Comment updated:", response);
-        // Update the comment in the UI
-        setComments(
-          comments.map((c) =>
-            c._id === comment._id ? { ...c, content: updatedContent } : c
-          )
-        );
-      } catch (error) {
-        console.error("Error updating comment:", error);
-      }
+      );
+      console.log("Comment updated:", response);
+      // Update the comment in the UI
+      const updatedCommets = comments.map((com) =>
+        com._id === comment._id ? { ...com, content: updatedContent } : com
+      );
+
+      setComments(updatedCommets);
+      setIsEditMode(false);
+    } catch (error) {
+      console.error("Error updating comment:", error);
     }
   };
-  const handleChange = (e) => {
-    setUpdatedContent(e.target.value);
-  };
+
   //** Delete */
-  const handleDelete = async() => {
-    const commentId = comment._id;
-    const response = await axios.delete(`${process.env.REACT_APP_SERVER_URL}/comments/d/${commentId}`)
-    console.log(response);
-    
+  const handleDelete = async () => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await axios.delete(
+        `${process.env.REACT_APP_SERVER_URL}/comments/d/${comment._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Delete response: ", response);
+      const updatedCommets = comments.filter((com) => com._id !== comment._id);
+      setComments(updatedCommets);
+    } catch (error) {
+      console.log("Error while deleting comment:", error.message);
+    }
   };
 
   return (
@@ -107,19 +119,22 @@ function CommentMsg({ comment, currentUserId, comments, setComments }) {
             {currentUserId === comment.ownerDetails._id && (
               <div className="relative z-5" ref={menuRef}>
                 <button onClick={toggleMenu} className="absolute top-0 right-0">
-                  <IoEllipsisVertical size={25} className="hover:bg-gray-200 rounded-full px-1 py-1"/>
+                  <IoEllipsisVertical
+                    size={25}
+                    className="hover:bg-gray-200 rounded-full px-1 py-1"
+                  />
                 </button>
                 {menuOpen && (
                   <div className="absolute top-6 right-0 bg-white shadow-md rounded-md p-2">
                     <button
-                      className="flex items-center gap-1 text-gray-700 hover:bg-gray-200 p-1 rounded"
+                      className="w-full flex items-center gap-1 text-gray-700 hover:bg-gray-200 p-1 rounded"
                       onClick={handleUpdate}
                     >
                       <IoPencil size={16} />
-                      <span>Update</span>
+                      <span>Edit</span>
                     </button>
                     <button
-                      className="flex items-center gap-1 text-gray-700 hover:bg-gray-200 p-1 rounded"
+                      className="w-full flex items-center gap-1 text-gray-700 hover:bg-gray-200 p-1 rounded"
                       onClick={handleDelete}
                     >
                       <IoTrash size={16} />
@@ -131,12 +146,32 @@ function CommentMsg({ comment, currentUserId, comments, setComments }) {
             )}
           </div>
         </div>
-        <div className="mt-1">
-          <p>{displayedText}</p>
-          {isLongText && (
-            <button onClick={handleReadMore} className="text-blue-400 text-sm ">
-              {isExpanded ? "Show less" : "Read more"}
-            </button>
+        {/* Display comment text */}
+        <div className="text-gray-600 text-base font-medium">
+          {isEditMode ? (
+            <div>
+              <input
+                type="text"
+                value={updatedContent}
+                onChange={(e) => setUpdatedContent(e.target.value)}
+                className="w-full p-2 border-2 border-gray-300 rounded outline-none"
+              />
+              <button
+                onClick={saveUpdate}
+                className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+              >
+                Save
+              </button>
+            </div>
+          ) : (
+            <>
+              {displayedText}
+              {isLongText && (
+                <button className="text-blue-500 text-sm" onClick={handleReadMore}>
+                  {isExpanded ? " Read less" : " Read more"}
+                </button>
+              )}
+            </>
           )}
         </div>
       </div>
