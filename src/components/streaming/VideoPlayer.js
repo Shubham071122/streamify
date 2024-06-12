@@ -1,30 +1,158 @@
-import React from 'react'
-import './VideoPlayer.css'
+import React, { useEffect, useState } from 'react';
+import './VideoPlayer.css';
+import { FcLikePlaceholder, FcLike } from 'react-icons/fc';
+import { FaRegShareFromSquare } from 'react-icons/fa6';
+import { RiPlayListAddFill } from 'react-icons/ri';
+import { NavLink } from 'react-router-dom';
+import axios from 'axios';
 
-function VideoPlayer({video}) {
-  console.log("Inside videoplayer:",video);
-    if(!video){
-      return (
-        <div className='text-white'>
-          Video not found
-        </div>
-      )
+function VideoPlayer({ video }) {
+  const [subscriberCount, setSubscriberCount] = useState(0);
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [buttonClicked, setButtonClicked] = useState(false);
+  
+  const channelId = video.owner?._id;
+  const currentUserId = localStorage.getItem('userId');
+
+  console.log('channelId:', channelId);
+  useEffect(() => {
+    if (!channelId) {
+      console.error('Channel ID is not available.');
+      return;
     }
+    const fetchSubscriber = async () => {
+      const token = localStorage.getItem('token');
+      // console.log("token:",token);
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_SERVER_URL}/subscriptions/c/${channelId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        console.log('Subscriber:', response);
+        // Set the subscriber count in the state
+        if (response.data && response.data.data) {
+          setSubscriberCount(response.data.data.length);
+        }
+
+        //Checking if the current user is subscribed
+        const isAlreadySubscribed = response.data.data.some(
+          (sub) =>
+            sub.subscriber === currentUserId && sub.channel === channelId,
+        );
+        console.log('isUserSubscribed:', isAlreadySubscribed);
+        setIsSubscribed(isAlreadySubscribed);
+      } catch (error) {
+        console.log('Error while fetching subscriber:', error);
+      }
+    };
+    fetchSubscriber();
+  }, [channelId, currentUserId]);
+
+  //* TOGGLE SUBSCRIDER
+  const handleSubscription = async () => {
+    const token = localStorage.getItem('token');
+
+    console.log('token:', token);
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/subscriptions/c/${channelId}`,
+        {}, // Empty body for the POST request
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      console.log('subscribed:', response);
+      // Toggle the subscription state
+      setIsSubscribed((prevState) => !prevState);
+      setButtonClicked(true);
+      setTimeout(() => setButtonClicked(false), 1000); // Remove class after animation
+    } catch (error) {
+      console.log('Error while toggle subscription:', error);
+    }
+  };
+
+  console.log('Inside videoplayer:', video);
+  if (!video) {
+    return <div className="text-white">Video not found</div>;
+  }
   return (
-    <div className="">
-      <div className="">
-        <div className="">
-          <video
-            className=" w-full h-full rounded-xl"
-            src={video.videoFile}
-            controls
-          ></video>
+    <div className="w-full h-screen">
+      {/* VIDEO */}
+      <div className="min-w-[200px] max-w-[800px] w-[800px]">
+        <video
+          className=" w-full h-full rounded-xl box shad"
+          src={video.videoFile}
+          controls
+        ></video>
+      </div>
+      {/* DESCRIPTION */}
+      <div className="border-[1px] border-white mt-10 rounded-xl p-4 desc-bg text-white">
+        {/* LIKE */}
+        <div className="w-full flex items-center gap-8 mb-5">
+          <div>
+            <FcLikePlaceholder
+              size={30}
+              className="hover:text-red-500 transition-all 0.2s ease-in-out"
+            />
+          </div>
+          <div>
+            <RiPlayListAddFill
+              size={26}
+              className="hover:text-red-200 transition-all 0.2s ease-in-out"
+            />
+          </div>
+          <div>
+            <FaRegShareFromSquare
+              size={26}
+              className="hover:text-red-200 transition-all 0.2s ease-in-out"
+            />
+          </div>
         </div>
-        <h1 className="text-white text-2xl mb-4 mt-10">{video.title}</h1>
-        <p className="text-gray-300">{video.description}</p>
+
+        {/* TITLE AND USER */}
+        <div>
+          <p className="text-white text-2xl">{video.title}</p>
+          <div className="w-full flex items-center justify-between">
+            <div className="w-full flex my-4">
+              <div className="w-10 h-10 flex-shrink-0 mr-4">
+                <NavLink>
+                  <img
+                    src={video.owner.avatar}
+                    alt=""
+                    className="rounded-full object-cover object-center"
+                  />
+                </NavLink>
+              </div>
+
+              <div className="text-white font-medium flex-grow ">
+                <NavLink>
+                  <p className="text-wrap capitalize">{video.owner.fullName}</p>
+                </NavLink>
+                <p>{}</p>
+                <p className="text-gray-400 text-sm">
+                  {subscriberCount}&nbsp;&nbsp;&nbsp;subscribers
+                </p>
+              </div>
+            </div>
+            <button
+              className={`capitalize px-5 py-2 mr-5 rounded-full text-base font-medium transition-all duration-300 subs ${isSubscribed ? 'bg-red-600 text-gray-100 hover:bg-red-400' : 'bg-red-400 text-gray-100 hover:bg-red-600'} subscribe-button ${buttonClicked ? 'clicked' : ''}`}
+              onClick={handleSubscription}
+            >
+              {isSubscribed ? <p>Unsubscribe</p> : <p>subscribe</p>}
+            </button>
+          </div>
+        </div>
+
+        {/* <p className="text-gray-300">{video.description}</p> */}
       </div>
     </div>
   );
 }
 
-export default VideoPlayer
+export default VideoPlayer;

@@ -9,7 +9,6 @@ function Comment({ videoId }) {
   const [commentMsg, setCommentMsg] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [editingCommentId, setEditingCommentId] = useState(null);
 
   //fetching userId form local storage.
   const currentUserId = localStorage.getItem("userId");
@@ -47,11 +46,6 @@ function Comment({ videoId }) {
   const handleChange = (e) => {
     setCommentMsg(e.target.value)
   }
-  // handleEditClick
-  const handleEditClick = (comment) => {
-    setCommentMsg(comment.comment); 
-    setEditingCommentId(comment._id);
-  };
 
   //* POST COMMENT:---
   const postComment = async(e) => {
@@ -111,8 +105,8 @@ function Comment({ videoId }) {
   }
 
   return (
-    <div className="w-[360px] h-[580px] bg-white relative rounded-lg">
-      <div className="w-full px-5 py-4 bg-gray-300 rounded-t-xl sticky top-0 z-10">
+    <div className="w-[360px] h-[580px] bg-white relative rounded-xl">
+      <div className="w-full px-5 py-4 bg-gray-300 rounded-t-xl top-0 z-1">
         <h2 className="font-semibold text-lg">Comments</h2>
       </div>
     <div className="w-[360px] h-[460px] bg-gray-50">

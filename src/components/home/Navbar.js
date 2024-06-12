@@ -46,7 +46,7 @@ function Navbar() {
           placeholder="Search"
           className="max-w-[600px] w-[550px]  py-2 px-6 rounded-full outline-none  bg-gray-100 text-black font-medium tracking-wide"
         />
-        <button className="py-3 bg-red-100 px-3 rounded-full ml-2 text-center hover:bg-red-200 transition-all 0.4s ease-in-out">
+        <button className="py-3 bg-gray-100 px-3 rounded-full ml-2 text-center hover:bg-red-200 transition-all 0.4s ease-in-out">
           <IoSearch style={{ fontSize: "20px" }} />
         </button>
       </div>

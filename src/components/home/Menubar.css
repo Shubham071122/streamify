@@ -3,10 +3,11 @@
     transition: background-color 0.1s ease-out;
 }
 .menu:hover{
-    background-color: rgb(240, 93, 93);
-    /* background-color: rgb(92, 38, 139); */
+    background-color: rgba(177, 176, 176, 0.373);
+    /* background-color: rgb(240, 93, 93); */
     transition: all 0.2s ease
 }
 .menu-active {
-    background-color: rgb(240, 93, 93);
+    background-color: rgba(177, 176, 176, 0.373);
+    /* background-color: rgba(240, 93, 93, 0.308); */
 }

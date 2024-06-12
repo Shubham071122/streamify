@@ -108,10 +108,11 @@ function CommentMsg({ comment, currentUserId, comments, setComments }) {
       </div>
       <div className="w-full">
         <div className="text-gray-500 text-xs flex justify-between w-full object-cover object-center font-medium">
-          <div className="flex ">
-            <p className="border-r-[3px] border-gray-400 pr-2 mr-2">
+          <div className="flex items-center">
+            <p className="">
               {comment.ownerDetails.fullName}
             </p>
+            <p className="ml-2 mr-2 h-3 w-[1px] bg-slate-400"></p>
             <p className="">{relativeTime}</p>
           </div>
           {/* UPDATE AND DELETE */}

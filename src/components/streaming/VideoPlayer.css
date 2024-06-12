@@ -7,3 +7,45 @@
       1px 2px 12px var(--shadow-color)
     );
 }
+.desc-bg{
+  background: rgb(0,0,0);
+background: linear-gradient(360deg, rgba(0,0,0,1) 1%, rgba(0,0,0,0.9024859943977591) 42%, rgba(62,62,62,0.7232142857142857) 65%, rgba(132,132,132,0.5243347338935574) 87%, rgba(255,255,255,0.241421568627451) 100%);
+/* background-color: white; */
+}
+
+.subs{
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+}
+
+
+@keyframes borderCircularMotion {
+  0% {
+    border-color: red;
+  }
+  25% {
+    border-color: blue;
+  }
+  50% {
+    border-color: green;
+  }
+  75% {
+    border-color: yellow;
+  }
+  100% {
+    border-color: red;
+  }
+}
+
+.subscribe-button {
+  position: relative;
+  transition: all 0.3s ease;
+  border: 2px solid transparent; /* Ensure initial border is transparent */
+  border-radius: 50%; 
+  /* Make the border circular */
+}
+
+.subscribe-button.clicked {
+  animation: borderCircularMotion 1s infinite;
+}
+
+
