@@ -148,7 +148,7 @@ function CommentMsg({ comment, currentUserId, comments, setComments }) {
           </div>
         </div>
         {/* Display comment text */}
-        <div className="text-gray-600 text-base font-medium">
+        <div className="text-black text-base font-normal">
           {isEditMode ? (
             <div>
               <input

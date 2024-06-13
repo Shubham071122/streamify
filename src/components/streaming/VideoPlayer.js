@@ -1,81 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import './VideoPlayer.css';
 import { FcLikePlaceholder, FcLike } from 'react-icons/fc';
 import { FaRegShareFromSquare } from 'react-icons/fa6';
 import { RiPlayListAddFill } from 'react-icons/ri';
 import { NavLink } from 'react-router-dom';
-import axios from 'axios';
+import { useSubscription } from '../../context/SubscriptionContext';
 
 function VideoPlayer({ video }) {
-  const [subscriberCount, setSubscriberCount] = useState(0);
-  const [isSubscribed, setIsSubscribed] = useState(false);
-  const [buttonClicked, setButtonClicked] = useState(false);
+
+  const {subscriberCount,isSubscribed,buttonClicked,fetchSubscriber,toggleSubscription} = useSubscription();
   
   const channelId = video.owner?._id;
   const currentUserId = localStorage.getItem('userId');
 
   console.log('channelId:', channelId);
+
+  //* FETCHING SUBSCRIBER COUNT;
   useEffect(() => {
     if (!channelId) {
       console.error('Channel ID is not available.');
       return;
     }
-    const fetchSubscriber = async () => {
-      const token = localStorage.getItem('token');
-      // console.log("token:",token);
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_SERVER_URL}/subscriptions/c/${channelId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-        console.log('Subscriber:', response);
-        // Set the subscriber count in the state
-        if (response.data && response.data.data) {
-          setSubscriberCount(response.data.data.length);
-        }
-
-        //Checking if the current user is subscribed
-        const isAlreadySubscribed = response.data.data.some(
-          (sub) =>
-            sub.subscriber === currentUserId && sub.channel === channelId,
-        );
-        console.log('isUserSubscribed:', isAlreadySubscribed);
-        setIsSubscribed(isAlreadySubscribed);
-      } catch (error) {
-        console.log('Error while fetching subscriber:', error);
-      }
-    };
-    fetchSubscriber();
+    fetchSubscriber(channelId,currentUserId);
   }, [channelId, currentUserId]);
 
   //* TOGGLE SUBSCRIDER
-  const handleSubscription = async () => {
-    const token = localStorage.getItem('token');
-
-    console.log('token:', token);
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/subscriptions/c/${channelId}`,
-        {}, // Empty body for the POST request
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-      console.log('subscribed:', response);
-      // Toggle the subscription state
-      setIsSubscribed((prevState) => !prevState);
-      setButtonClicked(true);
-      setTimeout(() => setButtonClicked(false), 1000); // Remove class after animation
-    } catch (error) {
-      console.log('Error while toggle subscription:', error);
-    }
-  };
+  const handleSubscription = (e) => {
+    e.preventDefault();
+    if(!channelId) return;
+    toggleSubscription(channelId);
+  }
 
   console.log('Inside videoplayer:', video);
   if (!video) {

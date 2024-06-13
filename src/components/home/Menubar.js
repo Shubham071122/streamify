@@ -26,10 +26,10 @@ function Menubar() {
             }`
           }
         >
-          <div className="mr-5 text-xl">
+          <div className="mr-5 text-lg">
             <FiHome />
           </div>
-          <p>Home</p>
+          <p className='text-lg font-light'>Home</p>
         </NavLink>
 
         <NavLink
@@ -43,7 +43,7 @@ function Menubar() {
           <div className="mr-5 text-xl">
             <RiAccountCircleLine />
           </div>
-          <p>Profile</p>
+          <p className='text-lg font-light'>Profile</p>
         </NavLink>
 
         <NavLink
@@ -57,7 +57,7 @@ function Menubar() {
           <div className="mr-5 text-xl">
             <MdOutlineSubscriptions />
           </div>
-          <p>Subscriptions</p>
+          <p className='text-lg font-light'>Subscriptions</p>
         </NavLink>
 
         <NavLink
@@ -71,7 +71,7 @@ function Menubar() {
           <div className="mr-5 text-xl">
             <RiPlayList2Line />
           </div>
-          <p>Playlists</p>
+          <p className='text-lg font-light'>Playlists</p>
         </NavLink>
 
         <NavLink
@@ -85,7 +85,7 @@ function Menubar() {
           <div className="mr-4 text-xl">
             <LuHistory />
           </div>
-          <p>Watch History</p>
+          <p className='text-lg font-light'>Watch History</p>
         </NavLink>
 
         <NavLink
@@ -96,10 +96,10 @@ function Menubar() {
             }`
           }
         >
-          <div className="mr-5 text-2xl">
+          <div className="mr-5 text-xl">
             <IoMdHelpCircleOutline />
           </div>
-          <p>About</p>
+          <p className='text-lg font-light'>About</p>
         </NavLink>
       </div>
       <div className='px-4 py-5'>

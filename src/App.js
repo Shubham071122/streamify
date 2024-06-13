@@ -44,6 +44,7 @@ function App() {
               <Route path="playlist" element={<Playlist />} />
               <Route path="watch-history" element={<WatchHistory />} />
               <Route path="about" element={<About />} />
+              <Route path="user/:userId"/>
             </Route>
           )}
           <Route path="*" element={<NoPage />} />
