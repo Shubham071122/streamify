@@ -4,10 +4,13 @@ import { IoSearch } from "react-icons/io5";
 import logo from "../../assets/Streamify.png";
 import { NavLink } from 'react-router-dom';
 import './Navbar.css'
+import { useVideo } from '../../context/VideoContext';
 
 function Navbar() {
   // const [erros,setErrors] = useState();
-  const [avatar,setAvatar] = useState();
+  const [avatar,setAvatar] = useState("");
+  const [query,setSearchQuery] = useState("")
+  const {fetchVideoByQuery} = useVideo();
 
   useEffect(() => {
     const fetchAvatar = async() => {
@@ -33,6 +36,12 @@ function Navbar() {
     fetchAvatar();
   },[])
 
+  const handleSearch = () => {
+    if (query.trim() !== '') {
+      fetchVideoByQuery(query);
+    }
+  }
+
   return (
     <div className="w-full flex items-center justify-between py-[.5px] px-10  bg-red-900 nav-shadow">
       <div className="-ml-6">
@@ -43,10 +52,12 @@ function Navbar() {
         <input
           type="search"
           name="search"
+          value={query}
+          onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search"
           className="max-w-[600px] w-[550px]  py-2 px-6 rounded-full outline-none  bg-gray-100 text-black font-medium tracking-wide"
         />
-        <button className="py-3 bg-gray-100 px-3 rounded-full ml-2 text-center hover:bg-red-200 transition-all 0.4s ease-in-out">
+        <button onClick={handleSearch} className="py-3 bg-gray-100 px-3 rounded-full ml-2 text-center hover:bg-red-200 transition-all 0.4s ease-in-out">
           <IoSearch style={{ fontSize: "20px" }} />
         </button>
       </div>

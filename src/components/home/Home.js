@@ -1,60 +1,36 @@
-import React, { useEffect, useState } from "react";
-import Video from "./Video";
-import Loader from "../loader/Loader";
+import React, { useEffect, useState } from 'react';
+import Video from './Video';
+import Loader from '../loader/Loader';
+import { useVideo } from '../../context/VideoContext';
 
 function Home() {
-  const [videos, setVideos] = useState([]);
-  const [errors, setErrors] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { videos, errors, loading, fetchVideos } = useVideo();
 
   useEffect(() => {
-    const fetchVideos = async () => {
-      setLoading(true);
-      try {
-        const token = localStorage.getItem("token");
-        const response = await fetch(
-          `${process.env.REACT_APP_SERVER_URL}/videos/`,
-          {
-            method:"GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        // console.log(response);
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        // console.log("data", data);
-        setVideos(data.message.videos);
-      } catch (error) {
-        console.log("Error while fetching videos:", error);
-        setErrors(error.message);
-      }finally{
-        setLoading(false);
-      }
-    };
     fetchVideos();
   }, []);
 
-  if(loading){
-    return <Loader/>
+  if (loading) {
+    return <Loader />;
   }
-  console.log("videosss:",videos);
+  console.log('videosss:', videos);
 
   return (
-    <div className="w-full h-screen flex justify-between px-14 py-14 flex-wrap">
+    <div className="w-full h-screen flex justify-around px-14 py-14 flex-wrap">
       {errors > 0 ? (
         <div>{errors}</div>
       ) : videos.length > 0 ? (
-        videos?.map((video, id) => (
-          <div key={id} className="mb-3">
+        videos?.map((video) => (
+          <div key={video._id} className="mb-3">
             <Video video={video} />
           </div>
         ))
       ) : (
-        <div>Error while fetching</div>
+        <div className="w-full flex items-center justify-center">
+          <p className="text-center font-bold text-2xl text-gray-500">
+            Video not found!
+          </p>
+        </div>
       )}
     </div>
   );

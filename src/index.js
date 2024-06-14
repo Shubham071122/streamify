@@ -5,14 +5,17 @@ import App from './App';
 import { AuthProvider } from './context/AuthContext';
 import { SubscriptionProvider } from './context/SubscriptionContext';
 import { UserProvider } from './context/UserContext';
+import { VideoProvider } from './context/VideoContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <AuthProvider>
     <UserProvider>
-      <SubscriptionProvider>
-        <App />
-      </SubscriptionProvider>
+      <VideoProvider>
+        <SubscriptionProvider>
+          <App />
+        </SubscriptionProvider>
+      </VideoProvider>
     </UserProvider>
   </AuthProvider>,
 );

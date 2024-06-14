@@ -3,7 +3,7 @@ import './Video.css'
 import { NavLink } from "react-router-dom";
 
 function Video({ video }) {
-  console.log("video:", video);
+  // console.log("video:", video);
   return (
     <NavLink to={`/video/${video._id}`} state={{ video }}>
       <div className="w-[370px] h-[300px] border-[1px] rounded-md video-hover bg-red-800 mb-14">
