@@ -4,8 +4,8 @@ import axios from 'axios';
 const SubscriptionContext = createContext();
 
 export const SubscriptionProvider = ({ children }) => {
-  const [subscriberCount, setSubscriberCount] = useState(0);
-  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [subscriberCount, setSubscriberCount] = useState({});
+  const [isSubscribed, setIsSubscribed] = useState({});
   const [buttonClicked, setButtonClicked] = useState(false);
   const [subscribedChannels,setSubscribedChannels] = useState([]);
 
@@ -26,19 +26,21 @@ export const SubscriptionProvider = ({ children }) => {
       console.log('Subscriber:', response);
       // Set the subscriber count in the state
       if (response.data && response.data.data) {
-        setSubscriberCount(response.data.data.length);
-        // setSubscriberCount((prevCounts) => ({
-        //   ...prevCounts,
-        //   [channelId]: response.data.data.count, // Ensure you're setting the correct count
-        // }))
+        setSubscriberCount((prevCounts) => ({
+          ...prevCounts,
+          [channelId]: response.data.data.length, // Ensure you're setting the correct count
+        }));
       }
 
       //Checking if the current user is subscribed
       const isAlreadySubscribed = response.data.data.some(
         (sub) => sub.subscriber === currentUserId && sub.channel === channelId,
       );
-      // console.log('isUserSubscribed:', isAlreadySubscribed);
-      setIsSubscribed(isAlreadySubscribed);
+      // console.log('isAlreadySubscribed:', isAlreadySubscribed);
+      setIsSubscribed((prevIsSubscribed) => ({
+        ...prevIsSubscribed,
+        [channelId]: isAlreadySubscribed,
+      }));
     } catch (error) {
       console.log('Error while fetching subscriber:', error);
     }
@@ -61,8 +63,23 @@ export const SubscriptionProvider = ({ children }) => {
       );
       console.log('subscribed:', response);
       // Toggle the subscription state
-      setIsSubscribed((prevState) => !prevState);
-      setSubscriberCount(prevCount => isSubscribed ? prevCount - 1 : prevCount + 1);// Sync ui with click
+      setIsSubscribed((prevIsSubscribed) => {
+        const newIsSubscribed = !prevIsSubscribed[channelId];
+        
+        // Update the subscriber count
+        setSubscriberCount((prevCount) => ({
+          ...prevCount,
+          [channelId]: newIsSubscribed
+            ? prevCount[channelId] + 1
+            : prevCount[channelId] - 1,
+        }));
+        
+        return {
+          ...prevIsSubscribed,
+          [channelId]: newIsSubscribed,
+        };
+      });
+
       setButtonClicked(true);// Hanling ui of button
       setTimeout(() => setButtonClicked(false), 1000); // Remove class after animation
     } catch (error) {

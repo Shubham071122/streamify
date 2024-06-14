@@ -1,7 +1,7 @@
 import React from 'react'
 import VideoPlayer from './VideoPlayer'
 import Comment from './Comment';
-import Discription from './Discription';
+import Description from './Description';
 import { useLocation, useParams } from "react-router-dom";
 
 function Stream() {
@@ -12,7 +12,7 @@ function Stream() {
     <div className='w-full h-screen p-10 flex justify-between'>
       <div>
         <VideoPlayer video={video}/>
-        <Discription />
+        <Description />
       </div>
       <div>
         <Comment videoId={videoId}/>

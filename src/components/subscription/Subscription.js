@@ -3,17 +3,17 @@ import { useSubscription } from '../../context/SubscriptionContext';
 import ChannelDetail from './ChannelDetail';
 
 function Subscription() {
-  const { subscribedChannels, fetchSubscribedChannels } = useSubscription();
+  const { subscribedChannels, fetchSubscribedChannels } = useSubscription([]);
 
   useEffect(() => {
     const currentUserId = localStorage.getItem('userId');
     fetchSubscribedChannels(currentUserId);
   }, []);
 
-  if (!subscribedChannels) {
+  if (subscribedChannels.length < 1) {
     return (
-      <div className="w-full h-screen flex items-center justify-center text-white">
-        <p className="text-xl font-semibold">No channel found!</p>
+      <div className="w-full h-full flex items-center justify-center text-white">
+        <p className="text-2xl font-semibold text-white">No channel found!</p>
       </div>
     );
   }

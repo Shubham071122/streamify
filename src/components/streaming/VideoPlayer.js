@@ -9,7 +9,6 @@ import { useSubscription } from '../../context/SubscriptionContext';
 function VideoPlayer({ video }) {
 
   const {subscriberCount,isSubscribed,buttonClicked,fetchSubscriber,toggleSubscription} = useSubscription();
-  
   const channelId = video.owner?._id;
   const currentUserId = localStorage.getItem('userId');
 
@@ -90,15 +89,15 @@ function VideoPlayer({ video }) {
                 </NavLink>
                 <p>{}</p>
                 <p className="text-gray-400 text-sm">
-                  {subscriberCount}&nbsp;&nbsp;&nbsp;subscribers
+                  {subscriberCount[channelId]}&nbsp;&nbsp;&nbsp;subscribers
                 </p>
               </div>
             </div>
             <button
-              className={`capitalize px-5 py-2 mr-5 rounded-full text-base font-medium transition-all duration-300 subs ${isSubscribed ? 'bg-red-600 text-gray-100 hover:bg-red-400' : 'bg-red-400 text-gray-100 hover:bg-red-600'} subscribe-button ${buttonClicked ? 'clicked' : ''}`}
+              className={`w-52 h-12 capitalize px-3 py-2 mr-5 rounded-full text-base font-medium transition-all duration-300 subs ${isSubscribed[channelId] ? 'bg-yellow-700 text-gray-100 hover:bg-yellow-600' : 'bg-red-600 text-gray-100 hover:bg-red-500'} subscribe-button ${buttonClicked ? 'clicked' : ''}`}
               onClick={handleSubscription}
             >
-              {isSubscribed ? <p>Unsubscribe</p> : <p>subscribe</p>}
+              {isSubscribed[channelId] ? <p>Unsubscribe  ✔</p> : <p>subscribe</p>}
             </button>
           </div>
         </div>
