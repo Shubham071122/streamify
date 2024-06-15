@@ -33,14 +33,14 @@ function LandingPage() {
             <div>
               <NavLink
                 to="/login"
-                className="text-[18px] px-3 py-2 bg-red-500 rounded-md hover:bg-red-600 hover:transition-all 0.4s ease mr-3"
+                className="text-[16px] px-3 py-2 bg-red-500 rounded-sm hover:bg-red-600 hover:transition-all 0.4s ease mr-3"
                 onClick={() => setIsLogin(!isLogin)}
               >
                 Log In
               </NavLink>
               <NavLink
                 to="/register"
-                className="text-[18px] px-3 py-2 bg-red-500 rounded-md hover:bg-red-600 hover:transition-all 0.4s ease"
+                className="text-[16px] px-3 py-2 bg-red-500 rounded-sm hover:bg-red-600 hover:transition-all 0.4s ease"
               >
                 Create account
               </NavLink>
