@@ -16,6 +16,7 @@ import Home from './components/home/Home';
 import Layout from './components/layout/Layout';
 import WatchHistory from './components/watchHistory/WatchHistory';
 import Stream from "./components/streaming/Stream";
+import Profile from './components/profile/Profile';
 
 function App() {
   const { isAuthenticated } = useContext(AuthContext);
@@ -39,6 +40,7 @@ function App() {
             <Route path="/" element={<ProtectedRoutes />}>
               <Route index element={<Home />} />
               <Route path="video/:videoId" element={<Stream />} />
+              <Route path="profile" element={<Profile />} />
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="subscription" element={<Subscription />} />
               <Route path="playlist" element={<Playlist />} />

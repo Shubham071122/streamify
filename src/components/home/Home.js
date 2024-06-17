@@ -13,7 +13,7 @@ function Home() {
   if (loading) {
     return <Loader />;
   }
-  console.log('videosss:', videos);
+  // console.log('videosss:', videos);
 
   return (
     <div className="w-full h-screen flex justify-around px-14 py-14 flex-wrap">

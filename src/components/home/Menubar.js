@@ -1,6 +1,6 @@
 import React from 'react'
 import './Menubar.css'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { FiHome } from "react-icons/fi";
 import { RiAccountCircleLine } from "react-icons/ri";
 import { MdOutlineSubscriptions } from "react-icons/md";
@@ -14,11 +14,13 @@ import AuthContext from '../../context/AuthContext';
 
 function Menubar() {
   const { logout } = useContext(AuthContext);
+  const navigate = useNavigate();
   return (
     <div className="w-2/12 h-full bg-red-800 ">
     <div className='w-full h-full flex flex-col items-center justify-between'>
       <div className=" flex flex-col items-start mt-14 mx-4">
         <NavLink
+        // onClick={navigate('/')}
           to="/"
           className={({ isActive }) =>
             `text-white flex items-center text-lg mb-6 px-8 py-2 rounded-md w-full menu ${
@@ -43,7 +45,7 @@ function Menubar() {
           <div className="mr-5 text-xl">
             <RiAccountCircleLine />
           </div>
-          <p className='text-lg font-light'>Profile</p>
+          <p className='text-lg font-light'>Dashboard</p>
         </NavLink>
 
         <NavLink
