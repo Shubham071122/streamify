@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './VideoPlayer.css';
 import { FcLikePlaceholder, FcLike } from 'react-icons/fc';
 import { FaRegShareFromSquare } from 'react-icons/fa6';
@@ -11,7 +11,7 @@ function VideoPlayer({ video }) {
   const {subscriberCount,isSubscribed,buttonClicked,fetchSubscriber,toggleSubscription} = useSubscription();
   const channelId = video.owner?._id;
   const currentUserId = localStorage.getItem('userId');
-
+  const [isLiked,setIsLiked] = useState(false);
   console.log('channelId:', channelId);
 
   //* FETCHING SUBSCRIBER COUNT;
@@ -48,24 +48,28 @@ function VideoPlayer({ video }) {
       <div className="border-[1px] border-white mt-10 rounded-xl p-4 desc-bg text-white">
         {/* LIKE */}
         <div className="w-full flex items-center gap-8 mb-5">
-          <div>
+          <button onClick={() => setIsLiked(!isLiked)}>
+            {
+              isLiked ? <FcLike size={30}/> :
+            
             <FcLikePlaceholder
               size={30}
               className="hover:text-red-500 transition-all 0.2s ease-in-out"
             />
-          </div>
-          <div>
+          }
+          </button>
+          <button>
             <RiPlayListAddFill
               size={26}
               className="hover:text-red-200 transition-all 0.2s ease-in-out"
             />
-          </div>
-          <div>
+          </button>
+          <button>
             <FaRegShareFromSquare
               size={26}
               className="hover:text-red-200 transition-all 0.2s ease-in-out"
             />
-          </div>
+          </button>
         </div>
 
         {/* TITLE AND USER */}
