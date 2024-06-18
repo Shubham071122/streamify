@@ -3,8 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { MdOutlineModeEditOutline } from 'react-icons/md';
 import { FaSpinner } from 'react-icons/fa';
 import Loader from '../loader/Loader';
+import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 
 function Profile() {
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [passError, setPassError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -354,7 +356,7 @@ function Profile() {
                 Old Password
               </label>
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 name="oldPassword"
                 value={passwordData.oldPassword}
                 onChange={handlePasswordInputChange}
@@ -368,30 +370,39 @@ function Profile() {
                 New Password
               </label>
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 name="newPassword"
                 value={passwordData.newPassword}
                 onChange={handlePasswordInputChange}
                 className="mt-1 p-2 w-full border rounded-md"
                 required
               />
-              <label
-                className="block text-sm font-medium text-gray-700 mt-4"
-                htmlFor="confirmNewPassword"
-              >
-                Confirm New Password
-              </label>
-              <input
-                type="password"
-                name="confirmNewPassword"
-                value={passwordData.confirmNewPassword}
-                onChange={handlePasswordInputChange}
-                className="mt-1 p-2 w-full border rounded-md"
-                required
-              />
+              <div className="relative">
+                <label
+                  className="block text-sm font-medium text-gray-700 mt-4"
+                  htmlFor="confirmNewPassword"
+                >
+                  Confirm New Password
+                </label>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  name="confirmNewPassword"
+                  value={passwordData.confirmNewPassword}
+                  onChange={handlePasswordInputChange}
+                  className="mt-1 p-2 w-full border rounded-md"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-9 text-gray-600"
+                >
+                  {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+                </button>
+              </div>
               <button
                 type="submit"
-                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md"
+                className="w-44 mt-4 px-4 py-2 bg-blue-600 text-white rounded-md"
                 disabled={passLoading}
               >
                 {passLoading ? (

@@ -17,6 +17,8 @@ import Layout from './components/layout/Layout';
 import WatchHistory from './components/watchHistory/WatchHistory';
 import Stream from "./components/streaming/Stream";
 import Profile from './components/profile/Profile';
+import ForgotPassword from './auth/ForgotPassword';
+import ResetPassword from './auth/ResetPassword';
 
 function App() {
   const { isAuthenticated } = useContext(AuthContext);
@@ -31,9 +33,13 @@ function App() {
     <>
       <Router>
         <Routes>
+          {/* Unprotected Routes */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
 
+          {/* Protected Routes */}
           {!isAuthenticated ? (
             <Route path="/" element={<LandingPage />} />
           ) : (
