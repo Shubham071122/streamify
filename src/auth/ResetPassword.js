@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
+import toast from 'react-hot-toast';
 
 const ResetPassword = () => {
   const { token } = useParams();
@@ -16,7 +17,8 @@ const ResetPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
-      setError('Passwords do not match');
+      setError('Passwords not matched!');
+      toast.error('Passwords not matched!')
       return;
     }
     setLoading(true);
@@ -30,9 +32,11 @@ const ResetPassword = () => {
       );
       console.log('Rt res:', response);
       setMessage('Password updated successfully!');
+      toast.success('Password updated successfully!')
       setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
       setError(err.response.data.message || 'An error occurred');
+      toast.error(err.response.data.message || 'An error occurred')
     } finally {
       setLoading(false);
     }
@@ -42,8 +46,8 @@ const ResetPassword = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-4 bg-gray-300 rounded shadow">
         <h2 className="text-2xl font-bold text-center">Reset Password</h2>
-        {message && <p className="text-green-600">{message}</p>}
-        {error && <p className="text-red-600">{error}</p>}
+        {/* {message && <p className="text-green-600">{message}</p>} */}
+        {/* {error && <p className="text-red-600">{error}</p>} */}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">

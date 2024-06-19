@@ -1,15 +1,17 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { FaRegEye, FaRegEyeSlash, FaSpinner } from 'react-icons/fa';
 import { MdOutlineModeEditOutline } from 'react-icons/md';
-import { FaSpinner } from 'react-icons/fa';
-import Loader from '../loader/Loader';
-import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
-import toast, { Toaster } from 'react-hot-toast';
+import Loader from '../loader/Loader';
+import { FaExclamationCircle } from "react-icons/fa";
 
 function Profile() {
   const [showDeletePopup, setShowDeletePopup] = useState(false);
+  const [showPasswordPopup, setShowPasswordPopup] = useState(false);
+  const [showEditPopup, setShowEditPopup] = useState(false);
   const [deleteEmail, setDeleteEmail] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -22,8 +24,6 @@ function Profile() {
   const [coverImageLoading, setCoverImageLoading] = useState(false);
   const [avatarLoading, setAvatarLoading] = useState(false);
   const [success, setSuccess] = useState('');
-  const [passSuccess, setPassSuccess] = useState('');
-  const [editMode, setEditMode] = useState(false);
   const [userData, setUserData] = useState({
     fullName: '',
     email: '',
@@ -31,7 +31,6 @@ function Profile() {
     coverImage: '',
     avatar: '',
   });
-  const [changePasswordMode, setChangePasswordMode] = useState(false);
   const [passwordData, setPasswordData] = useState({
     oldPassword: '',
     newPassword: '',
@@ -84,21 +83,24 @@ function Profile() {
       if (name === 'coverImage') setCoverImageLoading(true);
       if (name === 'avatar') setAvatarLoading(true);
 
+      console.log('formadata:', formData.get(name));
+
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.patch(
-          `${process.env.REACT_APP_SERVER_URL}/users/${
-            name === 'coverImage' ? 'cover-image' : 'avatar'
-          }`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'multipart/form-data',
-            },
-          },
-        );
+        console.log('Token:', token);
 
+        const apiUrl = `${process.env.REACT_APP_SERVER_URL}/users/${
+          name === 'coverImage' ? 'cover-image' : 'avatar'
+        }`;
+        console.log('API URL:', apiUrl);
+
+        const response = await axios.patch(apiUrl, formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        console.log('res', response);
         if (response.data && response.data.data) {
           setUserData((prevData) => ({
             ...prevData,
@@ -114,6 +116,7 @@ function Profile() {
         console.log(`Error while updating ${name}:`, error);
         setError(error.message);
       } finally {
+        console.log('Inside finaly file.');
         if (name === 'coverImage') setCoverImageLoading(false);
         if (name === 'avatar') setAvatarLoading(false);
       }
@@ -145,13 +148,15 @@ function Profile() {
       if (response.data && response.data.data) {
         setUserData(response.data.data);
         setSuccess('Profile updated successfully');
-        setEditMode(false);
+        toast.success('Profile updated successfully');
       }
     } catch (error) {
       console.log('Error while updating profile:', error);
       setError(error.message);
+      toast.error(error.message);
     } finally {
       setLoading(false);
+      setShowEditPopup(false);
     }
   };
 
@@ -187,7 +192,6 @@ function Profile() {
     e.preventDefault();
     setPassLoading(true);
     setPassError('');
-    setPassSuccess('');
 
     if (passwordData.newPassword !== passwordData.confirmNewPassword) {
       setPassError('New password do not match!');
@@ -218,19 +222,20 @@ function Profile() {
       // console.log(response);
 
       if (response.data.success === true) {
-        setPassSuccess('Password updated successfully');
-        setChangePasswordMode(false);
         setPasswordData({
           oldPassword: '',
           newPassword: '',
           confirmNewPassword: '',
         });
+        toast.success('Password updated successfully!');
       }
     } catch (error) {
       console.log('Error while updating password:', error);
       setPassError(error.message);
     } finally {
       setPassLoading(false);
+      setShowPasswordPopup(false);
+      navigate('/profile');
     }
   };
 
@@ -253,28 +258,27 @@ function Profile() {
           },
         },
       );
-      console.log("del Resp:",response);
+      console.log('del Resp:', response);
       setSuccess(response.data.message);
-      toast.success("Account deleted successfully!");
-      if (response.data.message === "success") {
+      toast.success('Account deleted successfully!');
+      if (response.data.message === 'success') {
         setTimeout(() => {
           setShowDeletePopup(false);
-          localStorage.removeItem("token");
-          localStorage.removeItem("userId");
-          navigate("/login");
+          localStorage.removeItem('token');
+          localStorage.removeItem('userId');
+          navigate('/login');
         }, 3000);
       }
     } catch (error) {
-      console.log("Error while deleting account:",error);
-      setDelError("something went wrong!")
+      console.log('Error while deleting account:', error);
+      setDelError('something went wrong!');
       toast.error(error.response.data.message);
-    }finally {
+    } finally {
       setDelLoading(false);
     }
-
   };
 
-// IF PROFILE NOT FOUND
+  // IF PROFILE NOT FOUND
   if (profileLoading) {
     return (
       <div className="w-full h-full">
@@ -283,231 +287,14 @@ function Profile() {
     );
   }
 
-  // return (
-  //   <div className="w-8/12 min-h-screen instead m-5 bg-gray-200 rounded-lg mx-auto relative pb-5">
-  //     {/* TOP PART */}
-  //     <div className="w-full">
-  //       {/* COVER IMAGE */}
-  //       <div className="w-full h-60 relative rounded-md">
-  //         {coverImageLoading ? (
-  //           <div className="w-full h-full flex items-center justify-center bg-gray-300 rounded-md">
-  //             <FaSpinner className="animate-spin text-4xl text-gray-600" />
-  //           </div>
-  //         ) : (
-  //           <img
-  //             src={userData.coverImage}
-  //             alt="coverImage"
-  //             className="w-full h-60 object-cover rounded-md border-b-4"
-  //           />
-  //         )}
-  //         <div className="absolute top-4 right-4 px-1 py-1 bg-white text-xl rounded-full">
-  //           <label htmlFor="coverImage" className="cursor-pointer">
-  //             <MdOutlineModeEditOutline />
-  //           </label>
-  //           <input
-  //             type="file"
-  //             name="coverImage"
-  //             id="coverImage"
-  //             onChange={handleFileChange}
-  //             className="opacity-0 w-0 h-0 absolute"
-  //           />
-  //         </div>
-  //       </div>
-  //       {/* AVATAR */}
-  //       <div className="w-44 h-40 absolute top-32 left-14">
-  //         {avatarLoading ? (
-  //           <div className="w-40 h-40 flex items-center justify-center bg-gray-300 rounded-full border-4">
-  //             <FaSpinner className="animate-spin text-4xl text-gray-600" />
-  //           </div>
-  //         ) : (
-  //           <img
-  //             src={userData.avatar}
-  //             alt="avatar"
-  //             className="w-40 h-40 object-cover rounded-full object-center border-4 bg-gray-300"
-  //           />
-  //         )}
-  //         <div className="absolute bottom-4 right-6 px-1 py-1 bg-white text-xl rounded-full">
-  //           <label htmlFor="avatar" className="cursor-pointer">
-  //             <MdOutlineModeEditOutline />
-  //           </label>
-  //           <input
-  //             type="file"
-  //             name="avatar"
-  //             id="avatar"
-  //             onChange={handleFileChange}
-  //             className="opacity-0 w-0 h-0 absolute"
-  //           />
-  //         </div>
-  //       </div>
-  //     </div>
-
-  //     {/* BOTTOM PART */}
-  //     <div className="mt-20 px-5 w-full ">
-  //       <h2 className="text-2xl font-bold">Profile Information</h2>
-  //       {/* Name */}
-  //       <div className="mt-4">
-  //         <label
-  //           className="block text-sm font-medium text-gray-700"
-  //           htmlFor="fullName"
-  //         >
-  //           Name
-  //         </label>
-  //         {editMode ? (
-  //           <input
-  //             type="text"
-  //             name="fullName"
-  //             value={userData.fullName}
-  //             onChange={handleInputChange}
-  //             className="mt-1 p-2 w-full border rounded-md"
-  //           />
-  //         ) : (
-  //           <p className="mt-1">{userData.fullName}</p>
-  //         )}
-  //       </div>
-  //       {/* UserName */}
-  //       <div className="mt-4">
-  //         <label className="block text-sm font-medium text-gray-700">
-  //           Username
-  //         </label>
-  //         <p className="mt-1">{userData.username}</p>
-  //       </div>
-  //       {/* Email */}
-  //       <div className="mt-4">
-  //         <label
-  //           className="block text-sm font-medium text-gray-700"
-  //           htmlFor="email"
-  //         >
-  //           Email
-  //         </label>
-  //         {editMode ? (
-  //           <input
-  //             type="email"
-  //             name="email"
-  //             value={userData.email}
-  //             onChange={handleInputChange}
-  //             className="mt-1 p-2 w-full border rounded-md"
-  //           />
-  //         ) : (
-  //           <p className="mt-1">{userData.email}</p>
-  //         )}
-  //       </div>
-  //       {/* Password */}
-  //       <div className="mt-4">
-  //         <p className="block text-sm font-medium text-gray-700 mb-2">
-  //           Password
-  //         </p>
-  //         {changePasswordMode ? (
-  //           <form onSubmit={handleChangePassword}>
-  //             <label
-  //               className="block text-sm font-medium text-gray-700"
-  //               htmlFor="oldPassword"
-  //             >
-  //               Old Password
-  //             </label>
-  //             <input
-  //               type={showPassword ? 'text' : 'password'}
-  //               name="oldPassword"
-  //               value={passwordData.oldPassword}
-  //               onChange={handlePasswordInputChange}
-  //               className="mt-1 p-2 w-full border rounded-md"
-  //               required
-  //             />
-  //             <label
-  //               className="block text-sm font-medium text-gray-700 mt-4"
-  //               htmlFor="newPassword"
-  //             >
-  //               New Password
-  //             </label>
-  //             <input
-  //               type={showPassword ? 'text' : 'password'}
-  //               name="newPassword"
-  //               value={passwordData.newPassword}
-  //               onChange={handlePasswordInputChange}
-  //               className="mt-1 p-2 w-full border rounded-md"
-  //               required
-  //             />
-  //             <div className="relative">
-  //               <label
-  //                 className="block text-sm font-medium text-gray-700 mt-4"
-  //                 htmlFor="confirmNewPassword"
-  //               >
-  //                 Confirm New Password
-  //               </label>
-  //               <input
-  //                 type={showPassword ? 'text' : 'password'}
-  //                 name="confirmNewPassword"
-  //                 value={passwordData.confirmNewPassword}
-  //                 onChange={handlePasswordInputChange}
-  //                 className="mt-1 p-2 w-full border rounded-md"
-  //                 required
-  //               />
-  //               <button
-  //                 type="button"
-  //                 onClick={() => setShowPassword(!showPassword)}
-  //                 className="absolute right-3 top-9 text-gray-600"
-  //               >
-  //                 {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
-  //               </button>
-  //             </div>
-  //             <button
-  //               type="submit"
-  //               className="w-44 mt-4 px-4 py-2 bg-blue-600 text-white rounded-md"
-  //               disabled={passLoading}
-  //             >
-  //               {passLoading ? (
-  //                 <FaSpinner className="animate-spin" />
-  //               ) : (
-  //                 'Change Password'
-  //               )}
-  //             </button>
-  //             {passError && <p className="text-red-500 mt-2">{passError}</p>}
-  //           </form>
-  //         ) : (
-  //           <button
-  //             onClick={() => setChangePasswordMode(true)}
-  //             className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md"
-  //           >
-  //             Change Password
-  //           </button>
-  //         )}
-  //         {passSuccess && <p className="text-green-500 mt-2">{passSuccess}</p>}
-  //       </div>
-
-  //       {editMode && (
-  //         <button
-  //           onClick={handleSubmit}
-  //           className="mt-4 px-4 py-2 bg-green-600 text-white rounded-md"
-  //           disabled={loading}
-  //         >
-  //           {loading ? <FaSpinner className="animate-spin" /> : 'Save Changes'}
-  //         </button>
-  //       )}
-  //       {!editMode && (
-  //         <button
-  //           onClick={() => setEditMode(true)}
-  //           className="mt-4 px-4 py-2 bg-yellow-600 text-white rounded-md"
-  //         >
-  //           Edit Profile
-  //         </button>
-  //       )}
-  //       <button
-  //       className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md flex items-center">
-  //         <p>Delete Account </p><span><RiDeleteBin6Line className='text-lg ml-2'/></span>
-  //       </button>
-  //       {error && <p className="text-red-500 mt-2">{error}</p>}
-  //       {success && <p className="text-green-500 mt-2">{success}</p>}
-  //     </div>
-  //   </div>
-  // );
-
-  if(!userData){
-    return(
+  if (!userData) {
+    return (
       <div className="w-full flex items-center justify-center">
-          <p className="text-center font-bold text-2xl text-gray-500">
-            Profile not found!
-          </p>
-        </div>
-    )
+        <p className="text-center font-bold text-2xl text-gray-500">
+          Profile not found!
+        </p>
+      </div>
+    );
   }
 
   return (
@@ -541,7 +328,7 @@ function Profile() {
           </div>
         </div>
         {/* AVATAR */}
-        <div className="w-44 h-44 absolute top-40 left-14 rounded-full border-4 border-white shadow-md">
+        <div className="w-44 h-44 absolute top-40 left-14 rounded-full border-1 border-white shadow-md bg-gray-300">
           {avatarLoading ? (
             <div className="w-44 h-44 flex items-center justify-center bg-gray-300 rounded-full">
               <FaSpinner className="animate-spin text-4xl text-gray-600" />
@@ -550,7 +337,7 @@ function Profile() {
             <img
               src={userData.avatar}
               alt="avatar"
-              className="w-44 h-44 object-cover rounded-full border-4 border-white"
+              className="w-44 h-44 object-cover rounded-full border-4 border-white text-center"
             />
           )}
           <div className="absolute bottom-4 right-4 px-2 py-2 bg-white text-xl rounded-full shadow-md">
@@ -581,17 +368,7 @@ function Profile() {
           >
             Name
           </label>
-          {editMode ? (
-            <input
-              type="text"
-              name="fullName"
-              value={userData.fullName}
-              onChange={handleInputChange}
-              className="mt-1 p-2 w-full border rounded-md shadow-sm"
-            />
-          ) : (
-            <p className="mt-1 text-lg text-gray-700">{userData.fullName}</p>
-          )}
+          <p className="mt-1 text-lg text-gray-700">{userData.fullName}</p>
         </div>
         {/* Username */}
         <div className="mt-6">
@@ -608,24 +385,100 @@ function Profile() {
           >
             Email
           </label>
-          {editMode ? (
-            <input
-              type="email"
-              name="email"
-              value={userData.email}
-              onChange={handleInputChange}
-              className="mt-1 p-2 w-full border rounded-md shadow-sm"
-            />
-          ) : (
-            <p className="mt-1 text-lg text-gray-700">{userData.email}</p>
-          )}
+          <p className="mt-1 text-lg text-gray-700">{userData.email}</p>
         </div>
-        {/* Password */}
-        <div className="mt-6">
-          <p className="block text-sm font-medium text-gray-700 mb-2">
-            Password
-          </p>
-          {changePasswordMode ? (
+
+        <div className='flex gap-4 mb-20 mt-10'>
+          {/* Password */}
+          <button
+            onClick={() => setShowPasswordPopup(true)}
+            className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-md shadow-md flex items-center"
+          >
+            <p>Change Password</p>
+          </button>
+          {/* Edit profile */}
+          <button
+            onClick={() => setShowEditPopup(true)}
+            className="mt-6 px-4 py-2 bg-yellow-600 text-white rounded-md shadow-md flex items-center"
+          >
+            <p>Edit Profile</p>
+          </button>
+          {/* Delete */}
+          <button
+            onClick={() => setShowDeletePopup(true)}
+            className="mt-6 px-4 py-2 bg-red-600 text-white rounded-md shadow-md flex items-center"
+          >
+            <p>Delete Account</p>
+            <RiDeleteBin6Line className="text-lg ml-2" />
+          </button>
+        </div>
+        {error && <p className="text-red-500 mt-2">{error}</p>}
+        {success && <p className="text-green-500 mt-2">{success}</p>}
+      </div>
+
+      {/* EDIT USER DATA POPUP */}
+      {showEditPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg shadow-lg w-[500px]">
+            <h2 className="text-xl font-bold mb-4">Update you profile</h2>
+            <p className="mb-4">Enter your data:</p>
+            <form onSubmit={handleSubmit}>
+              <label
+                className="block text-sm font-medium text-gray-700"
+                htmlFor="fullName"
+              >
+                Name
+              </label>
+              <input
+                type="text"
+                name="fullName"
+                value={userData.fullName}
+                onChange={handleInputChange}
+                className="mt-1 p-2 w-full border rounded-md shadow-sm"
+              />
+              <label
+                className="block text-sm font-medium text-gray-700 mt-4"
+                htmlFor="email"
+              >
+                Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={userData.email}
+                onChange={handleInputChange}
+                className="mt-1 p-2 w-full border rounded-md shadow-sm"
+              />
+              <div className="flex justify-end mt-4">
+                <button
+                  onClick={() => setShowEditPopup(false)}
+                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-red-600 text-white rounded-md shadow-md inline-block"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <FaSpinner className="animate-spin" />
+                  ) : (
+                    'Save changes'
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* SHOW CHANGE PASSWORD POPUP */}
+      {showPasswordPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg shadow-lg w-96">
+            <h2 className="text-xl font-bold mb-4">Create New Password</h2>
+            <p className="mb-4">Please enter user password here:</p>
             <form onSubmit={handleChangePassword}>
               <label
                 className="block text-sm font-medium text-gray-700"
@@ -678,62 +531,39 @@ function Profile() {
                   {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
                 </button>
               </div>
-              <button
-                type="submit"
-                className="w-48 mt-4 px-4 py-2 bg-blue-600 text-white rounded-md shadow-md"
-                disabled={passLoading}
-              >
-                {passLoading ? (
-                  <FaSpinner className="animate-spin" />
-                ) : (
-                  'Change Password'
-                )}
-              </button>
               {passError && <p className="text-red-500 mt-2">{passError}</p>}
+              <div className="flex justify-end mt-4">
+                <button
+                  onClick={() => setShowPasswordPopup(false)}
+                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-red-600 text-white rounded-md shadow-md inline-block"
+                  disabled={passLoading}
+                >
+                  {passLoading ? (
+                    <FaSpinner className="animate-spin" />
+                  ) : (
+                    'Change Password'
+                  )}
+                </button>
+              </div>
             </form>
-          ) : (
-            <button
-              onClick={() => setChangePasswordMode(true)}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md shadow-md"
-            >
-              Change Password
-            </button>
-          )}
-          {passSuccess && <p className="text-green-500 mt-2">{passSuccess}</p>}
+          </div>
         </div>
+      )}
 
-        {editMode && (
-          <button
-            onClick={handleSubmit}
-            className="mt-6 px-4 py-2 bg-green-600 text-white rounded-md shadow-md"
-            disabled={loading}
-          >
-            {loading ? <FaSpinner className="animate-spin" /> : 'Save Changes'}
-          </button>
-        )}
-        {!editMode && (
-          <button
-            onClick={() => setEditMode(true)}
-            className="mt-6 px-4 py-2 bg-yellow-600 text-white rounded-md shadow-md"
-          >
-            Edit Profile
-          </button>
-        )}
-        <button
-          onClick={() => setShowDeletePopup(true)}
-          className="mt-6 px-4 py-2 bg-red-600 text-white rounded-md shadow-md flex items-center"
-        >
-          <p>Delete Account</p>
-          <RiDeleteBin6Line className="text-lg ml-2" />
-        </button>
-        {error && <p className="text-red-500 mt-2">{error}</p>}
-        {success && <p className="text-green-500 mt-2">{success}</p>}
-      </div>
-
+      {/* SHOW DELETE POPUP */}
       {showDeletePopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-lg">
-            <h2 className="text-xl font-bold mb-4">Confirm Delete Account</h2>
+            <div className='w-full flex items-center justify-center'>
+            <FaExclamationCircle className='w-16 h-16 text-red-700 text-center mb-4'/>
+            </div>
+            <h2 className="text-xl font-bold mb-4 text-center">Confirm Delete Account</h2>
             <p className="mb-4">
               Please enter your email to confirm account deletion:
             </p>
@@ -747,7 +577,7 @@ function Profile() {
                 required
               />
               {delError && <p className="text-red-500 mt-2">{delError}</p>}
-              <div className="flex justify-end">
+              <div className="flex justify-end mt-4">
                 <button
                   onClick={() => setShowDeletePopup(false)}
                   className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
@@ -757,8 +587,13 @@ function Profile() {
                 <button
                   type="submit"
                   className="px-4 py-2 bg-red-600 text-white rounded-md"
-                  disabled={delLoading}>
-                  {delLoading ? <FaSpinner className="animate-spin" /> : 'Delete'}
+                  disabled={delLoading}
+                >
+                  {delLoading ? (
+                    <FaSpinner className="animate-spin" />
+                  ) : (
+                    'Delete'
+                  )}
                 </button>
               </div>
             </form>

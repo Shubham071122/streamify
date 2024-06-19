@@ -3,6 +3,7 @@ import AuthContext from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import './LoginPage.css'
+import toast from 'react-hot-toast';
 
 const LoginPage = () => {
   // const backgroundImage = `url(${require("../assets/bg1.jpeg")})`;
@@ -23,8 +24,10 @@ const LoginPage = () => {
       const data = await login(credentials);
       console.log("Login successful:", data);
       navigate("/");
+      toast.success("Login successfully!")
     } catch (error) {
       setError("Login failed. Please check your credentials and try again.");
+      toast.error("Login failed,Check your credentials!")
     }
   };
 
@@ -68,7 +71,7 @@ const LoginPage = () => {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-11"
+              className="absolute right-3 top-11 text-gray-400 text-lg"
             >
               {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
             </button>
@@ -76,7 +79,7 @@ const LoginPage = () => {
           <p>
             <Link
               to="/forgot-password"
-              className="text-white text-xs hover:text-blue-400"
+              className="text-blue-200 text-xs hover:text-blue-400"
             >
               Forgot Password?
             </Link>
@@ -84,7 +87,7 @@ const LoginPage = () => {
           <button className="btn w-full" type="submit">
             Sign In
           </button>
-          {error && <p style={{ color: "red" }}>{error}</p>}
+          {/* {error && <p style={{ color: "red" }}>{error}</p>} */}
         </form>
         <div className="w-full h-[0.2px] bg-white my-5"></div>
         <div className="text-center text-sm">

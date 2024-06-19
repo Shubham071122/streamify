@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 // import {jwtDecode} from 'jwt-decode';
 
 const AuthContext = createContext();
@@ -63,6 +64,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("userId");
     setIsAuthenticated(false);
     setToken("");
+    toast.success("LogOut successfully!")
   };
 
   return (

@@ -6,6 +6,7 @@ import { AuthProvider } from './context/AuthContext';
 import { SubscriptionProvider } from './context/SubscriptionContext';
 import { UserProvider } from './context/UserContext';
 import { VideoProvider } from './context/VideoContext';
+import { Toaster } from 'react-hot-toast';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -14,6 +15,7 @@ root.render(
       <VideoProvider>
         <SubscriptionProvider>
           <App />
+          <Toaster />
         </SubscriptionProvider>
       </VideoProvider>
     </UserProvider>

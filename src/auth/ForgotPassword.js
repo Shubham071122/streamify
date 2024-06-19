@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -23,10 +24,12 @@ const ForgotPassword = () => {
           },
         },
       );
-      console.log('Fg res:', response);
+      // console.log('Fg res:', response);
       setMessage("Reset link send successfully! Check your email.");
+      setEmail('');
     } catch (err) {
       setError("Email not found!");
+      toast.error("Email not found!")
     } finally {
       setLoading(false);
     }
@@ -37,7 +40,7 @@ const ForgotPassword = () => {
       <div className="w-full max-w-md p-8 space-y-4 bg-gray-300 rounded shadow">
         <h2 className="text-2xl font-bold text-center">Forgot Password</h2>
         {message && <p className="text-green-600">{message}</p>}
-        {error && <p className="text-red-600">{error}</p>}
+        {/* {error && <p className="text-red-600">{error}</p>} */}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
