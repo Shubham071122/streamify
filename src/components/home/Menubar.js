@@ -63,7 +63,7 @@ function Menubar() {
         </NavLink>
 
         <NavLink
-          to="/playlist"
+          to="/playlists"
           className={({ isActive }) =>
             `text-white flex items-center text-lg mb-6 px-8 py-2 rounded-md w-full menu ${
               isActive ? "menu-active" : ""

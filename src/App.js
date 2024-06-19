@@ -10,7 +10,7 @@ import { useContext } from 'react';
 // import HomePage from './pages/home/HomePage';
 import Subscription from './components/subscription/Subscription';
 import Dashboard from './components/dashboard/Dashboard';
-import Playlist from './components/playlist/Playlist';
+import Playlists from './components/playlist/Playlists';
 import About from './components/about/About';
 import Home from './components/home/Home';
 import Layout from './components/layout/Layout';
@@ -19,6 +19,7 @@ import Stream from "./components/streaming/Stream";
 import Profile from './components/profile/Profile';
 import ForgotPassword from './auth/ForgotPassword';
 import ResetPassword from './auth/ResetPassword';
+import PlaylistDetails from './components/playlist/PlaylistDetails';
 
 function App() {
   const { isAuthenticated } = useContext(AuthContext);
@@ -49,7 +50,8 @@ function App() {
               <Route path="profile" element={<Profile />} />
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="subscription" element={<Subscription />} />
-              <Route path="playlist" element={<Playlist />} />
+              <Route path="playlists" element={<Playlists />} />
+              <Route path="playlists/:playlistId" element={<PlaylistDetails />} />
               <Route path="watch-history" element={<WatchHistory />} />
               <Route path="about" element={<About />} />
               <Route path="user/:userId"/>
