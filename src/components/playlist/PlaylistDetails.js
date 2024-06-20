@@ -1,26 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import Loader from '../loader/Loader';
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaSpinner } from 'react-icons/fa';
+import toast from 'react-hot-toast';
+import { FaExclamationCircle } from 'react-icons/fa';
+import { RxCross2 } from 'react-icons/rx';
 
 const PlaylistDetails = () => {
   const { playlistId } = useParams();
   const [playlist, setPlaylist] = useState(null);
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [createdDate,setCreatedDate] = useState('');
-  const [updatedDate,setUpdatedDate] = useState('');
+  const [editLoading, setEditLoading] = useState(false);
+  const [createdDate, setCreatedDate] = useState('');
+  const [updatedDate, setUpdatedDate] = useState('');
+  const [showPlaylistEditPopup, setShowPlaylistEditPopup] = useState(false);
+  const [showDeletePopup, setShowDeletePopup] = useState(false);
+  const navigate = useNavigate();
 
-  //EXTRACTING DATE FUNCTION:
+  //* EXTRACTING DATE FUNCTION:
   const formatDate = (isoDate) => {
     const date = new Date(isoDate);
-    
     const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); 
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const year = date.getFullYear();
-  
-    return (`${day}/${month}/${year}`);
+
+    return `${day}/${month}/${year}`;
   };
 
   useEffect(() => {
@@ -72,11 +79,94 @@ const PlaylistDetails = () => {
       }
     };
 
-    
-      fetchPlaylist();
+    fetchPlaylist();
   }, [playlistId]);
 
+  //*HANDLE INPUT CHANGE:
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setPlaylist((prevData) => ({ ...prevData, [name]: value }));
+  };
 
+  //* HANDLE SUBMIT:
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setEditLoading(true);
+
+    try {
+      const token = localStorage.getItem('token');
+      console.log('t:', token);
+      console.log(playlist.name);
+      console.log(playlist.description);
+      const response = await axios.patch(
+        `${process.env.REACT_APP_SERVER_URL}/playlist/${playlistId}`,
+        {
+          name: playlist.name,
+          description: playlist.description,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      if (response.data && response.data.data) {
+        setPlaylist(response.data.data);
+        toast.success('Playlist updated successfully!');
+      }
+    } catch (error) {
+      console.log('Error while updating plylist:', error);
+      toast.error('something went wrong!');
+    } finally {
+      setEditLoading(false);
+      setShowPlaylistEditPopup(false);
+    }
+  };
+
+  //* HANDLE DELETE PLAYLIST:
+  const handleDelete = async () => {
+    setEditLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.delete(
+        `${process.env.REACT_APP_SERVER_URL}/playlist/${playlistId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      if (response.data && response.data.data) {
+        toast.success('Playlist deleted successfully!');
+        navigate('/playlists');
+      }
+    } catch (error) {
+      console.log('Error while delteing playlist:', error);
+      toast.error('Something went wrong!');
+    }
+  };
+
+  //*HANDLE VIDEO REMOVE FROM PLAYLIST:
+  const handleVideoRemove = async () => {
+    const videoId = 'dfd';
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.delete(
+        `${process.env.REACT_APP_SERVER_URL}/playlist/remove/${videoId}/${playlistId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      if (response.data && response.data.data) {
+        toast.success('Video removed successfully!');
+      }
+    } catch (error) {
+      console.log('Error while removing video from playlist:', error);
+      toast.error('Something went wrong!');
+    }
+  };
 
   if (loading) {
     return (
@@ -97,36 +187,171 @@ const PlaylistDetails = () => {
   }
 
   return (
-    <div className="m-5">
-      <div className="container mx-auto p-6 bg-white text-black shadow-lg rounded-lg">
+    <div className="my-5 mx-14">
+      <div className="w-full mx-auto p-6 bg-white text-black shadow-lg rounded-lg min-h-screen">
         <div className="relative flex justify-between items-center mb-4">
-          <div className='w-4/5 mt-4 ml-4'>
-            <h2 className="text-3xl font-bold capitalize mb-2">{playlist.name}</h2>
-            <p className="text-gray-700 text-lg flex flex-wrap mb-4">{playlist.description}</p>
-            <p className="text-gray-700 text-sm italic font-medium">Created:<span className='pl-2'>{createdDate}</span></p>
-            <p className="text-gray-700 text-sm italic font-medium">Updated:<span className='pl-2'>{updatedDate}</span></p>
+          <div className="w-4/5 mt-4 ml-4">
+            <h2 className="text-3xl font-bold capitalize flex flex-wrap mb-2">
+              {playlist.name}
+            </h2>
+            <p className="text-gray-700 text-lg flex flex-wrap mb-4">
+              {playlist.description}
+            </p>
+            <p className="text-gray-700 text-sm italic font-medium">
+              Created:<span className="pl-2">{createdDate}</span>
+            </p>
+            <p className="text-gray-700 text-sm italic font-medium">
+              Updated:<span className="pl-2">{updatedDate}</span>
+            </p>
           </div>
           <div className="absolute flex space-x-2 top-4 right-4 bg-gray-200 px-3 py-2 rounded-full">
-            <button className="text-blue-500 hover:text-blue-700 mr-3">
+            <button
+              onClick={() => setShowPlaylistEditPopup(true)}
+              className="text-blue-500 hover:text-blue-700 mr-3"
+            >
               <FaEdit size={20} />
             </button>
-            <button className="text-red-500 hover:text-red-700">
+            <button
+              onClick={() => setShowDeletePopup(true)}
+              className="text-red-500 hover:text-red-700"
+            >
               <FaTrash size={20} />
             </button>
           </div>
         </div>
-        <div className='w-full h-[0.6px] bg-gray-500 my-10'></div>
-        <div className="grid grid-cols-1 gap-4">
+        <div className="w-full h-[0.6px] bg-gray-500 my-10"></div>
+
+        {/* BOTTOM PART */}
+
+        <div className="w-full flex flex-col gap-5 ">
           {videos.map((video) => (
-            <div key={video._id} className="flex bg-gray-100 p-4 rounded-lg shadow-md w-full">
-              <img src={video.thumbnail} alt={video.title} className="w-1/3 h-40 object-cover rounded-md mr-4" />
-              <div className="flex flex-col justify-start ml-5 mt-3">
-                <h3 className="text-xl font-bold">{video.title}</h3>
-                <p className="text-gray-700">{video.description}</p>
+            <div
+              onClick={() => navigate(`/video/${video._id}`)}
+              key={video._id}
+              className="bg-gray-100 p-4 rounded-lg shadow-md w-full h-4/5 flex relative cursor-pointer"
+            >
+              <div className="w-72 h-40 shadow-md">
+                <img
+                  src={video.thumbnail}
+                  alt={video.title}
+                  size={50}
+                  className="w-72 h-40 object-cover rounded-md mr-4 border border-red-400"
+                />
               </div>
+              <div className="flex flex-col ml-5 mt-3 w-8/12">
+                <h3 className="text-xl font-bold flex flex-wrap mb-4">
+                  {video.title.length > 150
+                    ? `${video.title.substring(0, 150)}...`
+                    : video.title}
+                </h3>
+                <p className="text-gray-700 flex flex-wrap">
+                  {video.description.length > 200
+                    ? `${video.description.substring(0, 200)}...`
+                    : video.description}
+                </p>
+              </div>
+              <button
+                onClick={handleVideoRemove}
+                className="absolute right-3 top-3 p-2 hover:bg-gray-300 rounded-full z-10"
+              >
+                <RxCross2 className="text-lg font-bold" />
+              </button>
             </div>
           ))}
         </div>
+
+        {/* SHOWING EDIT POPUP */}
+        {showPlaylistEditPopup && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white p-8 rounded-lg shadow-lg w-7/12 h-4/6 relative">
+              <h2 className="text-xl font-bold mb-4">Edit Playlist</h2>
+              <form onSubmit={handleSubmit}>
+                <label
+                  className="block text-sm font-medium text-gray-700"
+                  htmlFor="name"
+                >
+                  Title
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={playlist.name}
+                  onChange={handleInputChange}
+                  className="mt-1 p-2 w-full border rounded-md shadow-sm bg-slate-100"
+                />
+                <label
+                  className="block text-sm font-medium text-gray-700 mt-4"
+                  htmlFor="description"
+                >
+                  Description
+                </label>
+                <textarea
+                  name="description"
+                  value={playlist.description}
+                  onChange={handleInputChange}
+                  className="mt-1 p-2 w-full border rounded-md shadow-sm min-h-28 max-h-52 bg-slate-100"
+                  style={{ minHeight: '100px' }}
+                  rows={5}
+                />
+                <div className="absolute mt-4 right-8 bottom-8">
+                  <button
+                    onClick={() => setShowPlaylistEditPopup(false)}
+                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-red-600 text-white rounded-md shadow-md inline-block"
+                    disabled={editLoading}
+                  >
+                    {editLoading ? (
+                      <FaSpinner className="animate-spin" />
+                    ) : (
+                      'Save'
+                    )}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* SHOW DELETE POPUP */}
+        {showDeletePopup && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white p-8 rounded-lg shadow-lg">
+              <div className="w-full flex items-center justify-center">
+                <FaExclamationCircle className="w-14 h-14 text-red-700 text-center mb-4" />
+              </div>
+              <h2 className="text-xl font-bold mb-4 text-center">
+                Delete Playlist!
+              </h2>
+              <p className="mb-4 text-center">
+                Are you sure you want to delete this playlist.
+              </p>
+              <div className="flex justify-center mt-5">
+                <button
+                  onClick={() => setShowDeletePopup(false)}
+                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className="px-4 py-2 bg-red-600 text-white rounded-md"
+                  disabled={editLoading}
+                >
+                  {editLoading ? (
+                    <FaSpinner className="animate-spin" />
+                  ) : (
+                    'Delete'
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

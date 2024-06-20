@@ -23,7 +23,7 @@ function Video({ video }) {
               <img
                 src={video.owner.avatar}
                 alt=""
-                className="rounded-full object-cover object-center"
+                className="w-10 h-10 rounded-full object-cover object-center"
               />
             </NavLink>
           </div>

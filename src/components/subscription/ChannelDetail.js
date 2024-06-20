@@ -49,13 +49,12 @@ console.log("sub count:",subscriberCount);
       ) : (
         <div className="w-full">
           <NavLink to={`user/${userId}`}>
-            <div className="w-full border rounded-2xl mb-8 flex items-center gap-10 p-5 back">
+            <div className="w-full border rounded-2xl mb-8 flex items-center gap-10 p-5 back  shadow-md">
               <div className="rounded-full border-2 border-red-500">
                 <img
                   src={channelData.avatar}
                   alt="avatar"
-                  width={100}
-                  className="rounded-full"
+                  className="w-36 h-36 rounded-full object-cover"
                 />
               </div>
               <div>

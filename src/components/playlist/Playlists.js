@@ -31,6 +31,16 @@ const Playlists = () => {
     fetchPlaylists();
   }, []);
 
+  //For date
+  //TODO: SOLVE PASS DATE FROM PD TO P;
+  const formatDate = (isoDate) => {
+    const date = new Date(isoDate);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return (`${day}/${month}/${year}`);
+  };
+
   if (loading) {
     return <div>
       <Loader/>
@@ -44,20 +54,35 @@ const Playlists = () => {
   }
 
   return (
-    <div className="w-full mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Your Playlists</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="my-5 mx-14">
+    <div className="w-full p-6 px-14 bg-white h-screen rounded-lg">
+      <h2 className="text-3xl font-bold mb-6 text-center ">Your Playlists</h2>
+      <div className='w-3/5 h-[0.6px] mx-auto bg-gray-300 my-5'></div>
+
+      <div className=" flex flex-col gap-10">
         {playlists.map((playlist) => (
           <div
             key={playlist._id}
-            className="bg-white p-4 rounded-lg shadow-md cursor-pointer w-full"
+            className="bg-gray-200 p-4 rounded-lg shadow-md cursor-pointer w-full min-h-28"
             onClick={() => navigate(`/playlists/${playlist._id}`)}
           >
-            <h3 className="text-xl font-bold">{playlist.name}</h3>
-            <p>{playlist.description}</p>
+            <div className="flex justify-between items-center  mb-2">
+              <h3 className="text-lg font-bold capitalize flex flex-wrap w-11/12 ">{playlist.name}</h3>
+              <p className="text-sm text-gray-500 ml-2 italic">{formatDate(playlist.createdAt)}</p>
+            </div>
+            <p className='flex flex-wrap w-11/12'>
+            {playlist.description.length > 150 ?
+            `${playlist.description.substring(0,150)}...`
+            :
+            playlist.description
+            
+            }
+            </p>
           </div>
         ))}
       </div>
+      
+    </div>
     </div>
   );
 };

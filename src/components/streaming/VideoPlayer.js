@@ -5,14 +5,17 @@ import { FaRegShareFromSquare } from 'react-icons/fa6';
 import { RiPlayListAddFill } from 'react-icons/ri';
 import { NavLink } from 'react-router-dom';
 import { useSubscription } from '../../context/SubscriptionContext';
+import axios from 'axios';
+import Loader from '../loader/Loader';
 
-function VideoPlayer({ video }) {
+function VideoPlayer({ videoId }) {
 
   const {subscriberCount,isSubscribed,buttonClicked,fetchSubscriber,toggleSubscription} = useSubscription();
-  const channelId = video.owner?._id;
+  const [video,setVideo] = useState(null)
+  const channelId = video?.owner._id;
   const currentUserId = localStorage.getItem('userId');
   const [isLiked,setIsLiked] = useState(false);
-  console.log('channelId:', channelId);
+  const [loading,setLoading] = useState(false);
 
   //* FETCHING SUBSCRIBER COUNT;
   useEffect(() => {
@@ -23,6 +26,29 @@ function VideoPlayer({ video }) {
     fetchSubscriber(channelId,currentUserId);
   }, [channelId, currentUserId]);
 
+  //* FETCHING VIDEO DETAILS:
+  useEffect(() => {
+    const fetchVideoDetails = async () => {
+      setLoading(true);
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/videos/${videoId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log("strvid:",response);
+        setVideo(response.data.data);
+      } catch (error) {
+        console.error('Error fetching video details:', error);
+      }finally{
+        setLoading(false);
+      } 
+    };
+
+    fetchVideoDetails();
+  }, [videoId]);
+
   //* TOGGLE SUBSCRIDER
   const handleSubscription = (e) => {
     e.preventDefault();
@@ -30,7 +56,12 @@ function VideoPlayer({ video }) {
     toggleSubscription(channelId);
   }
 
-  console.log('Inside videoplayer:', video);
+  if (loading) {
+    return <div className='w-full'>
+      <Loader/>
+    </div>;
+  }
+
   if (!video) {
     return <div className="text-white">Video not found</div>;
   }
@@ -45,7 +76,7 @@ function VideoPlayer({ video }) {
         ></video>
       </div>
       {/* DESCRIPTION */}
-      <div className="border-[1px] border-white mt-10 rounded-xl p-4 desc-bg text-white">
+      <div className="border-[1px] border-white mt-10 rounded-xl p-4 desc-bg text-white min-w-[200px] max-w-[800px] w-[800px]">
         {/* LIKE */}
         <div className="w-full flex items-center gap-8 mb-5">
           <button onClick={() => setIsLiked(!isLiked)}>
@@ -82,7 +113,7 @@ function VideoPlayer({ video }) {
                   <img
                     src={video.owner.avatar}
                     alt=""
-                    className="rounded-full object-cover object-center"
+                    className="w-10 h-10 rounded-full object-cover object-center"
                   />
                 </NavLink>
               </div>

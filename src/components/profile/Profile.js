@@ -272,7 +272,7 @@ function Profile() {
     } catch (error) {
       console.log('Error while deleting account:', error);
       setDelError('something went wrong!');
-      toast.error(error.response.data.message);
+      toast.error(error.message);
     } finally {
       setDelLoading(false);
     }
@@ -298,7 +298,7 @@ function Profile() {
   }
 
   return (
-    <div className="w-10/12 min-h-screen p-5 bg-gray-100 rounded-lg mx-auto relative pb-5">
+    <div className="w-10/12 min-h-screen p-5 bg-gray-100 rounded-lg mx-auto relative pb-5 my-5">
       {/* TOP PART */}
       <div className="w-full mb-10">
         {/* COVER IMAGE */}

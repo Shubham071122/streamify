@@ -19,11 +19,13 @@ function Subscription() {
   }
 
   return (
-    <div className="w-full h-screen p-10">
+    <div className='mx-14 my-5'>
+    <div className="w-full h-screen p-10 bg-white rounded-lg">
       {subscribedChannels &&
         subscribedChannels.map((channel) => (
           <ChannelDetail key={channel._id} channel={channel} />
         ))}
+    </div>
     </div>
   );
 }
