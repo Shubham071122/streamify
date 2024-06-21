@@ -1,12 +1,13 @@
 import React, { useContext, useState } from "react";
 import AuthContext from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { FaRegEye, FaRegEyeSlash, FaSpinner } from "react-icons/fa";
 import './LoginPage.css'
 import toast from 'react-hot-toast';
 
 const LoginPage = () => {
   // const backgroundImage = `url(${require("../assets/bg1.jpeg")})`;
+  const [loading,setLoading] = useState(false);
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -20,6 +21,7 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const data = await login(credentials);
       console.log("Login successful:", data);
@@ -28,6 +30,8 @@ const LoginPage = () => {
     } catch (error) {
       setError("Login failed. Please check your credentials and try again.");
       toast.error("Login failed,Check your credentials!")
+    }finally{
+      setLoading(false);
     }
   };
 
@@ -79,13 +83,21 @@ const LoginPage = () => {
           <p>
             <Link
               to="/forgot-password"
-              className="text-blue-200 text-xs hover:text-blue-400"
+              className="text-blue-200 text-xs"
             >
               Forgot Password?
             </Link>
           </p>
-          <button className="btn w-full" type="submit">
-            Sign In
+          <button className="btn w-full shadow-md flex items-center justify-center" type="submit"
+          disabled={loading}
+          >
+            {
+              loading ? (
+                <FaSpinner className="animate-spin" />
+              ):(
+                "Sign In"
+              )
+            }
           </button>
           {/* {error && <p style={{ color: "red" }}>{error}</p>} */}
         </form>

@@ -278,6 +278,10 @@ function Profile() {
     }
   };
 
+  const isUserDataEmpty = (data) => {
+    return !data.fullName && !data.email && !data.username;
+  };
+
   // IF PROFILE NOT FOUND
   if (profileLoading) {
     return (
@@ -287,9 +291,9 @@ function Profile() {
     );
   }
 
-  if (!userData) {
+  if (isUserDataEmpty(userData)) {
     return (
-      <div className="w-full flex items-center justify-center">
+      <div className="w-full h-full flex items-center justify-center">
         <p className="text-center font-bold text-2xl text-gray-500">
           Profile not found!
         </p>

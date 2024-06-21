@@ -44,7 +44,6 @@ const PlaylistDetails = () => {
           },
         );
         const playlistData = response.data.data;
-        console.log('res pd:', response.data.data);
         setPlaylist(playlistData[0]); // we do [0] this because response from backed is an array.
         // console.log(playlistData[0].video);
 
@@ -59,7 +58,6 @@ const PlaylistDetails = () => {
                 },
               },
             );
-            console.log('vid res:', videoResponse);
             return videoResponse.data.data;
           }),
         );
@@ -147,19 +145,25 @@ const PlaylistDetails = () => {
   };
 
   //*HANDLE VIDEO REMOVE FROM PLAYLIST:
-  const handleVideoRemove = async () => {
-    const videoId = 'dfd';
+  const handleVideoRemove = async (videoId) => {
+
+    console.log(videoId);
+
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.delete(
+      console.log("plytoken:",token)
+      const response = await axios.patch(
         `${process.env.REACT_APP_SERVER_URL}/playlist/remove/${videoId}/${playlistId}`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         },
       );
+      console.log(response);
       if (response.data && response.data.data) {
+        setVideos(response.data.data.video);
         toast.success('Video removed successfully!');
       }
     } catch (error) {
@@ -222,15 +226,19 @@ const PlaylistDetails = () => {
         <div className="w-full h-[0.6px] bg-gray-500 my-10"></div>
 
         {/* BOTTOM PART */}
+        
+        {
+            videos.length < 0? <p className='text-gray-300 text-xl font-medium'>No video added!</p> :
 
         <div className="w-full flex flex-col gap-5 ">
           {videos.map((video) => (
             <div
-              onClick={() => navigate(`/video/${video._id}`)}
               key={video._id}
-              className="bg-gray-100 p-4 rounded-lg shadow-md w-full h-4/5 flex relative cursor-pointer"
+              className="bg-gray-100 p-4 rounded-lg shadow-md w-full h-4/5 flex relative"
             >
-              <div className="w-72 h-40 shadow-md">
+              <div
+              onClick={() => navigate(`/video/${video._id}`)}
+               className="w-72 h-40 shadow-md cursor-pointer">
                 <img
                   src={video.thumbnail}
                   alt={video.title}
@@ -239,7 +247,7 @@ const PlaylistDetails = () => {
                 />
               </div>
               <div className="flex flex-col ml-5 mt-3 w-8/12">
-                <h3 className="text-xl font-bold flex flex-wrap mb-4">
+                <h3 className="text-xl font-bold flex flex-wrap mb-2">
                   {video.title.length > 150
                     ? `${video.title.substring(0, 150)}...`
                     : video.title}
@@ -251,7 +259,7 @@ const PlaylistDetails = () => {
                 </p>
               </div>
               <button
-                onClick={handleVideoRemove}
+                onClick={() => handleVideoRemove(video._id)}
                 className="absolute right-3 top-3 p-2 hover:bg-gray-300 rounded-full z-10"
               >
                 <RxCross2 className="text-lg font-bold" />
@@ -259,7 +267,7 @@ const PlaylistDetails = () => {
             </div>
           ))}
         </div>
-
+}
         {/* SHOWING EDIT POPUP */}
         {showPlaylistEditPopup && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">

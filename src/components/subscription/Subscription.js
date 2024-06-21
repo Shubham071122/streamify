@@ -12,8 +12,8 @@ function Subscription() {
 
   if (subscribedChannels.length < 1) {
     return (
-      <div className="w-full h-full flex items-center justify-center text-white">
-        <p className="text-2xl font-semibold text-white">No channel found!</p>
+      <div className="w-full h-full flex items-center justify-center">
+        <p className="text-2xl font-semibold text-gray-500">No channel found!</p>
       </div>
     );
   }

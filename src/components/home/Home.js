@@ -26,7 +26,7 @@ function Home() {
           </div>
         ))
       ) : (
-        <div className="w-full flex items-center justify-center">
+        <div className="w-full h-full flex items-center justify-center">
           <p className="text-center font-bold text-2xl text-gray-500">
             Video not found!
           </p>
