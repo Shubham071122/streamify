@@ -93,7 +93,7 @@ const LoginPage = () => {
           >
             {
               loading ? (
-                <FaSpinner className="animate-spin" />
+                <FaSpinner className="animate-spin text-2xl" />  
               ):(
                 "Sign In"
               )
