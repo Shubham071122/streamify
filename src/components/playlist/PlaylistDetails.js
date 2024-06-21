@@ -146,12 +146,11 @@ const PlaylistDetails = () => {
 
   //*HANDLE VIDEO REMOVE FROM PLAYLIST:
   const handleVideoRemove = async (videoId) => {
-
     console.log(videoId);
 
     try {
       const token = localStorage.getItem('token');
-      console.log("plytoken:",token)
+      console.log('plytoken:', token);
       const response = await axios.patch(
         `${process.env.REACT_APP_SERVER_URL}/playlist/remove/${videoId}/${playlistId}`,
         {},
@@ -226,48 +225,53 @@ const PlaylistDetails = () => {
         <div className="w-full h-[0.6px] bg-gray-500 my-10"></div>
 
         {/* BOTTOM PART */}
-        
-        {
-            videos.length < 0? <p className='text-gray-300 text-xl font-medium'>No video added!</p> :
 
-        <div className="w-full flex flex-col gap-5 ">
-          {videos.map((video) => (
-            <div
-              key={video._id}
-              className="bg-gray-100 p-4 rounded-lg shadow-md w-full h-4/5 flex relative"
-            >
+        {videos.length > 0 ? (
+          <div className="w-full flex flex-col gap-5 ">
+            {videos.map((video) => (
               <div
-              onClick={() => navigate(`/video/${video._id}`)}
-               className="w-72 h-40 shadow-md cursor-pointer">
-                <img
-                  src={video.thumbnail}
-                  alt={video.title}
-                  size={50}
-                  className="w-72 h-40 object-cover rounded-md mr-4 border border-red-400"
-                />
-              </div>
-              <div className="flex flex-col ml-5 mt-3 w-8/12">
-                <h3 className="text-xl font-bold flex flex-wrap mb-2">
-                  {video.title.length > 150
-                    ? `${video.title.substring(0, 150)}...`
-                    : video.title}
-                </h3>
-                <p className="text-gray-700 flex flex-wrap">
-                  {video.description.length > 200
-                    ? `${video.description.substring(0, 200)}...`
-                    : video.description}
-                </p>
-              </div>
-              <button
-                onClick={() => handleVideoRemove(video._id)}
-                className="absolute right-3 top-3 p-2 hover:bg-gray-300 rounded-full z-10"
+                key={video._id}
+                className="bg-gray-100 p-4 rounded-lg shadow-md w-full h-4/5 flex relative"
               >
-                <RxCross2 className="text-lg font-bold" />
-              </button>
-            </div>
-          ))}
-        </div>
-}
+                <div
+                  onClick={() => navigate(`/video/${video._id}`)}
+                  className="w-72 h-40 shadow-md cursor-pointer"
+                >
+                  <img
+                    src={video.thumbnail}
+                    alt={video.title}
+                    size={50}
+                    className="w-72 h-40 object-cover rounded-md mr-4 border border-red-400"
+                  />
+                </div>
+                <div className="flex flex-col ml-5 mt-3 w-8/12">
+                  <h3 className="text-xl font-bold flex flex-wrap mb-2">
+                    {video.title.length > 150
+                      ? `${video.title.substring(0, 150)}...`
+                      : video.title}
+                  </h3>
+                  <p className="text-gray-700 flex flex-wrap">
+                    {video.description.length > 200
+                      ? `${video.description.substring(0, 200)}...`
+                      : video.description}
+                  </p>
+                </div>
+                <button
+                  onClick={() => handleVideoRemove(video._id)}
+                  className="absolute right-3 top-3 p-2 hover:bg-gray-300 rounded-full z-10"
+                >
+                  <RxCross2 className="text-lg font-bold" />
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="w-full flex items-center justify-center h-full">
+            <p className="text-gray-700 text-xl font-medium z-10">
+              No video added!
+            </p>
+          </div>
+        )}
         {/* SHOWING EDIT POPUP */}
         {showPlaylistEditPopup && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
