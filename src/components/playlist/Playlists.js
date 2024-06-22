@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../loader/Loader';
-import { FaRegSquarePlus,FaPlus } from 'react-icons/fa6';
+import { FaRegSquarePlus, FaPlus } from 'react-icons/fa6';
 import { FaSpinner } from 'react-icons/fa';
 import toast from 'react-hot-toast';
+import './Playlists.css';
+
 const Playlists = () => {
   const [playlists, setPlaylists] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -67,18 +69,22 @@ const Playlists = () => {
           },
         },
       );
-      console.log("Playyyyyy:",response);
-      if(response.data && response.data.data){
+      console.log('Playyyyyy:', response);
+      if (response.data && response.data.data) {
         const newPlaylist = response.data.data;
         setPlaylists((prevPlaylists) => [...prevPlaylists, newPlaylist]);
-        toast.success("Playlist created successfully!")
+        toast.success('Playlist created successfully!');
       }
     } catch (error) {
-      console.log("Error while creating playlist:",error);
-      toast.error("Something went wrong!")
-    }finally{
+      console.log('Error while creating playlist:', error);
+      toast.error('Something went wrong!');
+    } finally {
       setCreateLoading(false);
       setShowCreatePlaylistPopup(false);
+      setPlaylistData({
+        title: '',
+        description: '',
+      });
     }
   };
 
@@ -103,7 +109,7 @@ const Playlists = () => {
   if (!playlists.length > 0) {
     return (
       <div className="w-full h-full flex items-center justify-center">
-        <p className="text-center font-bold text-2xl text-gray-500">
+        <p className="text-center font-bold text-2xl text-gray-500 overflow-y-scroll">
           Playlists not found!
         </p>
       </div>
@@ -111,13 +117,15 @@ const Playlists = () => {
   }
 
   return (
-    <div className="my-5 mx-14">
-      <div className="w-full p-6 px-14 bg-white h-screen rounded-lg ">
+    <div className="my-3 mx-14">
+      <div className="w-full p-6 px-14 bg-white min-h-screen rounded-lg ">
         <h2 className="text-3xl font-bold mb-6 text-center ">Your Playlists</h2>
         <div className="w-3/5 h-[0.6px] mx-auto bg-gray-300 my-5"></div>
 
-        <div className=" flex flex-col gap-10">
-          {playlists.map((playlist) => (
+        <div className=" flex flex-col gap-8">
+          {playlists
+            .sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .map((playlist) => (
             <div
               key={playlist._id}
               className="bg-gray-200 p-4 rounded-lg shadow-md cursor-pointer w-full min-h-28"
@@ -141,13 +149,23 @@ const Playlists = () => {
         </div>
 
         {/* Floating button */}
-        <button 
-        onClick={() => setShowCreatePlaylistPopup(true)}
-        className="fixed bottom-10 right-20">
-          <div className="w-16 h-16 bg-orange-500 rounded-full shadow-slate-400 shadow-md flex items-center justify-center">
-            <FaPlus className="text-4xl text-white font-bold" />
+        <div className="fixed bottom-10 right-20 flex flex-col items-center">
+          {/* Create playlist text */}
+          <div className="relative">
+            <button
+              onClick={() => setShowCreatePlaylistPopup(true)}
+              className="relative group"
+            >
+              <div className="w-16 h-16 bg-orange-500 rounded-full shadow-slate-400 shadow-md flex items-center justify-center">
+                <FaPlus className="text-4xl text-white font-bold" />
+              </div>
+              {/* Text to show on hover */}
+              <div className="absolute bottom-16 right-1 mb-2 w-28 bg-gray-700 text-white font-light text-center py-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                Create playlist
+              </div>
+            </button>
           </div>
-        </button>
+        </div>
 
         {/* SHOWING EDIT POPUP */}
         {showCreatPlylistPopup && (
@@ -182,7 +200,7 @@ const Playlists = () => {
                   style={{ minHeight: '100px' }}
                   rows={5}
                 />
-                <div className="absolute mt-4 right-8 bottom-8">
+                <div className="absolute mt-4 right-8 bottom-8 flex items-center justify-center">
                   <button
                     onClick={() => setShowCreatePlaylistPopup(false)}
                     className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
@@ -191,13 +209,13 @@ const Playlists = () => {
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-red-600 text-white rounded-md shadow-md inline-block"
+                    className="px-4 py-2 bg-red-600 text-white rounded-md shadow-md w-20 flex items-center justify-center"
                     disabled={createLoading}
                   >
                     {createLoading ? (
-                      <FaSpinner className="animate-spin" />
+                      <FaSpinner className="animate-spin text-2xl" />
                     ) : (
-                      'Save'
+                      'Create'
                     )}
                   </button>
                 </div>

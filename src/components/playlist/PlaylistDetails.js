@@ -267,7 +267,7 @@ const PlaylistDetails = () => {
           </div>
         ) : (
           <div className="w-full flex items-center justify-center h-full">
-            <p className="text-gray-700 text-xl font-medium z-10">
+            <p className="text-gray-700 text-xl font-medium">
               No video added!
             </p>
           </div>
@@ -305,7 +305,7 @@ const PlaylistDetails = () => {
                   style={{ minHeight: '100px' }}
                   rows={5}
                 />
-                <div className="absolute mt-4 right-8 bottom-8">
+                <div className="absolute mt-4 right-8 bottom-8 flex justify-center">
                   <button
                     onClick={() => setShowPlaylistEditPopup(false)}
                     className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
@@ -314,11 +314,11 @@ const PlaylistDetails = () => {
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-red-600 text-white rounded-md shadow-md inline-block"
+                    className="px-4 py-2 bg-red-600 text-white rounded-md shadow-md w-20 flex items-center justify-center"
                     disabled={editLoading}
                   >
                     {editLoading ? (
-                      <FaSpinner className="animate-spin" />
+                      <FaSpinner className="animate-spin text-xl" />
                     ) : (
                       'Save'
                     )}
@@ -351,11 +351,11 @@ const PlaylistDetails = () => {
                 </button>
                 <button
                   onClick={handleDelete}
-                  className="px-4 py-2 bg-red-600 text-white rounded-md"
+                  className="px-4 py-2 bg-red-600 text-white rounded-md w-20 flex items-center justify-center"
                   disabled={editLoading}
                 >
                   {editLoading ? (
-                    <FaSpinner className="animate-spin" />
+                    <FaSpinner className="animate-spin text-xl" />
                   ) : (
                     'Delete'
                   )}

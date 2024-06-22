@@ -7,6 +7,8 @@ import { NavLink } from 'react-router-dom';
 import { useSubscription } from '../../context/SubscriptionContext';
 import axios from 'axios';
 import Loader from '../loader/Loader';
+import { FaSpinner } from 'react-icons/fa';
+import toast from 'react-hot-toast';
 
 function VideoPlayer({ videoId }) {
 
@@ -16,6 +18,7 @@ function VideoPlayer({ videoId }) {
   const currentUserId = localStorage.getItem('userId');
   const [isLiked,setIsLiked] = useState(false);
   const [loading,setLoading] = useState(false);
+  const [subLoading,setSubLoading] = useState(false);
 
   //* FETCHING SUBSCRIBER COUNT;
   useEffect(() => {
@@ -50,10 +53,25 @@ function VideoPlayer({ videoId }) {
   }, [videoId]);
 
   //* TOGGLE SUBSCRIDER
-  const handleSubscription = (e) => {
+  const handleSubscription = async(e) => {
     e.preventDefault();
     if(!channelId) return;
-    toggleSubscription(channelId);
+    setSubLoading(true);
+
+    try {
+      await toggleSubscription(channelId);
+      if (isSubscribed[channelId]) {
+        toast.success('Unsubscribed successfully!');
+      } else {
+        toast.success('Subscribed successfully!');
+      }
+      
+    } catch (error) {
+      console.error('Subscription error', error);
+      toast.error('An error occurred!');
+    }finally{
+      setSubLoading(false);
+    }
   }
 
   if (loading) {
@@ -78,7 +96,7 @@ function VideoPlayer({ videoId }) {
       {/* DESCRIPTION */}
       <div className="border-[1px] border-white mt-10 rounded-xl p-4 desc-bg text-white min-w-[200px] max-w-[800px] w-[800px]">
         {/* LIKE */}
-        <div className="w-full flex items-center gap-8 mb-5">
+        <div className="w-full flex items-center gap-12 mb-10 ml-10 mt-2">
           <button onClick={() => setIsLiked(!isLiked)}>
             {
               isLiked ? <FcLike size={30}/> :
@@ -129,10 +147,17 @@ function VideoPlayer({ videoId }) {
               </div>
             </div>
             <button
-              className={`w-52 h-12 capitalize px-3 py-2 mr-5 rounded-full text-base font-medium transition-all duration-300 subs ${isSubscribed[channelId] ? 'bg-yellow-700 text-gray-100 hover:bg-yellow-600' : 'bg-red-600 text-gray-100 hover:bg-red-500'} subscribe-button ${buttonClicked ? 'clicked' : ''}`}
+              className={`w-52 h-12 flex items-center justify-center capitalize px-3 py-2 mr-5 rounded-full text-base font-medium transition-all duration-300 subs ${isSubscribed[channelId] ? 'bg-yellow-700 text-gray-100 hover:bg-yellow-600' : 'bg-red-600 text-gray-100 hover:bg-red-500'} subscribe-button ${buttonClicked ? 'clicked' : ''}`}
               onClick={handleSubscription}
+              disabled={loading}
             >
-              {isSubscribed[channelId] ? <p>Unsubscribe  ✔</p> : <p>subscribe</p>}
+              {
+                subLoading ? (
+                  <FaSpinner className="animate-spin text-xl" />
+                ) : (
+                   isSubscribed[channelId] ? "Unsubscribe" : "Subscribe"
+                )
+              }
             </button>
           </div>
         </div>

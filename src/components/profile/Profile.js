@@ -416,8 +416,8 @@ function Profile() {
             <RiDeleteBin6Line className="text-lg ml-2" />
           </button>
         </div>
-        {error && <p className="text-red-500 mt-2">{error}</p>}
-        {success && <p className="text-green-500 mt-2">{success}</p>}
+        {/* {error && <p className="text-red-500 mt-2">{error}</p>}
+        {success && <p className="text-green-500 mt-2">{success}</p>} */}
       </div>
 
       {/* EDIT USER DATA POPUP */}
@@ -462,11 +462,11 @@ function Profile() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-red-600 text-white rounded-md shadow-md inline-block"
+                  className="px-4 py-2 bg-red-600 text-white rounded-md shadow-md w-36 flex items-center justify-center"
                   disabled={loading}
                 >
                   {loading ? (
-                    <FaSpinner className="animate-spin" />
+                    <FaSpinner className="animate-spin text-sl" />
                   ) : (
                     'Save changes'
                   )}
@@ -545,11 +545,11 @@ function Profile() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-red-600 text-white rounded-md shadow-md inline-block"
+                  className="px-4 py-2 bg-red-600 text-white rounded-md shadow-md w-44 flex items-center justify-center"
                   disabled={passLoading}
                 >
                   {passLoading ? (
-                    <FaSpinner className="animate-spin" />
+                    <FaSpinner className="animate-spin text-xl" />
                   ) : (
                     'Change Password'
                   )}
@@ -590,11 +590,11 @@ function Profile() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-red-600 text-white rounded-md"
+                  className="px-4 py-2 bg-red-600 text-white rounded-md w-20 flex items-center justify-center"
                   disabled={delLoading}
                 >
                   {delLoading ? (
-                    <FaSpinner className="animate-spin" />
+                    <FaSpinner className="animate-spin text-xl" />
                   ) : (
                     'Delete'
                   )}
