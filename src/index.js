@@ -7,17 +7,20 @@ import { SubscriptionProvider } from './context/SubscriptionContext';
 import { UserProvider } from './context/UserContext';
 import { VideoProvider } from './context/VideoContext';
 import { Toaster } from 'react-hot-toast';
+import { PlaylistProvider } from './context/PlaylistContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <AuthProvider>
     <UserProvider>
-      <VideoProvider>
-        <SubscriptionProvider>
-          <App />
-          <Toaster />
-        </SubscriptionProvider>
-      </VideoProvider>
+      <PlaylistProvider>
+        <VideoProvider>
+          <SubscriptionProvider>
+            <App />
+            <Toaster />
+          </SubscriptionProvider>
+        </VideoProvider>
+      </PlaylistProvider>
     </UserProvider>
   </AuthProvider>,
 );

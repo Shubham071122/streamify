@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './VideoPlayer.css';
 import { FcLikePlaceholder, FcLike } from 'react-icons/fc';
-import { FaRegShareFromSquare } from 'react-icons/fa6';
-import { RiPlayListAddFill } from 'react-icons/ri';
+import { RiPlayListAddFill,RiShareLine  } from 'react-icons/ri';
 import { NavLink } from 'react-router-dom';
 import { useSubscription } from '../../context/SubscriptionContext';
 import axios from 'axios';
@@ -10,15 +9,23 @@ import Loader from '../loader/Loader';
 import { FaSpinner } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 
-function VideoPlayer({ videoId }) {
-
-  const {subscriberCount,isSubscribed,buttonClicked,fetchSubscriber,toggleSubscription} = useSubscription();
-  const [video,setVideo] = useState(null)
+function VideoPlayer({ videoId, onTogglePopup }) {
+  const {
+    subscriberCount,
+    isSubscribed,
+    buttonClicked,
+    fetchSubscriber,
+    toggleSubscription,
+  } = useSubscription();
+  const [video, setVideo] = useState(null);
+  console.log("vvvv:",video);
   const channelId = video?.owner._id;
   const currentUserId = localStorage.getItem('userId');
-  const [isLiked,setIsLiked] = useState(false);
-  const [loading,setLoading] = useState(false);
-  const [subLoading,setSubLoading] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [subLoading, setSubLoading] = useState(false);
+  const [showPlaylistName, setShowPlaylistName] = useState(false);
+  const [showShareName, setShowShareName] = useState(false);
 
   //* FETCHING SUBSCRIBER COUNT;
   useEffect(() => {
@@ -26,7 +33,7 @@ function VideoPlayer({ videoId }) {
       console.error('Channel ID is not available.');
       return;
     }
-    fetchSubscriber(channelId,currentUserId);
+    fetchSubscriber(channelId, currentUserId);
   }, [channelId, currentUserId]);
 
   //* FETCHING VIDEO DETAILS:
@@ -35,27 +42,30 @@ function VideoPlayer({ videoId }) {
       setLoading(true);
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/videos/${videoId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const response = await axios.get(
+          `${process.env.REACT_APP_SERVER_URL}/videos/${videoId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
-        console.log("strvid:",response);
+        );
+        console.log('strvid:', response);
         setVideo(response.data.data);
       } catch (error) {
         console.error('Error fetching video details:', error);
-      }finally{
+      } finally {
         setLoading(false);
-      } 
+      }
     };
 
     fetchVideoDetails();
   }, [videoId]);
 
   //* TOGGLE SUBSCRIDER
-  const handleSubscription = async(e) => {
+  const handleSubscription = async (e) => {
     e.preventDefault();
-    if(!channelId) return;
+    if (!channelId) return;
     setSubLoading(true);
 
     try {
@@ -65,19 +75,20 @@ function VideoPlayer({ videoId }) {
       } else {
         toast.success('Subscribed successfully!');
       }
-      
     } catch (error) {
       console.error('Subscription error', error);
       toast.error('An error occurred!');
-    }finally{
+    } finally {
       setSubLoading(false);
     }
-  }
+  };
 
   if (loading) {
-    return <div className='w-full'>
-      <Loader/>
-    </div>;
+    return (
+      <div className="w-full">
+        <Loader />
+      </div>
+    );
   }
 
   if (!video) {
@@ -95,30 +106,57 @@ function VideoPlayer({ videoId }) {
       </div>
       {/* DESCRIPTION */}
       <div className="border-[1px] border-white mt-10 rounded-xl p-4 desc-bg text-white min-w-[200px] max-w-[800px] w-[800px]">
-        {/* LIKE */}
+        {/* ICON */}
         <div className="w-full flex items-center gap-12 mb-10 ml-10 mt-2">
+          {/* LIKE */}
           <button onClick={() => setIsLiked(!isLiked)}>
-            {
-              isLiked ? <FcLike size={30}/> :
-            
-            <FcLikePlaceholder
-              size={30}
-              className="hover:text-red-500 transition-all 0.2s ease-in-out"
-            />
-          }
+            {isLiked ? (
+              <FcLike size={30} />
+            ) : (
+              <FcLikePlaceholder
+                size={30}
+                className="hover:text-red-500 transition-all 0.2s ease-in-out"
+              />
+            )}
           </button>
-          <button>
-            <RiPlayListAddFill
-              size={26}
-              className="hover:text-red-200 transition-all 0.2s ease-in-out"
-            />
-          </button>
-          <button>
-            <FaRegShareFromSquare
-              size={26}
-              className="hover:text-red-200 transition-all 0.2s ease-in-out"
-            />
-          </button>
+          {/* PLAYLIST */}
+          <div className="relative inline-block">
+            <button
+              className="focus:outline-none"
+              onMouseEnter={() => setShowPlaylistName(true)}
+              onMouseLeave={() => setShowPlaylistName(false)}
+              onClick={() => onTogglePopup(true)}
+            >
+              <RiPlayListAddFill
+                size={26}
+                className="hover:text-red-200 transition-all duration-200 ease-in-out"
+              />
+            </button>
+            {showPlaylistName && (
+              <div className="absolute text-white bg-black p-1 shadow-md border border-gray-200 top-full mt-2 left-0 w-28 text-center font-light text-sm hover:transition-opacity ">
+                Add Playlist
+              </div>
+            )}
+          </div>
+          {/* SHARE */}
+          <div className="relative inline-block">
+            <button
+              className="focus:outline-none"
+              onMouseEnter={() => setShowShareName(true)}
+              onMouseLeave={() => setShowShareName(false)}
+            >
+              <RiShareLine 
+                size={26}
+                className="hover:text-red-200 transition-all duration-200 ease-in-out"
+              />
+            </button>
+
+            {showShareName && (
+              <div className="absolute text-white bg-black p-1 shadow-md border border-gray-200 top-full mt-2 left-0 w-16 text-center font-light text-sm hover:transition-opacity ">
+                Share
+              </div>
+            )}
+          </div>
         </div>
 
         {/* TITLE AND USER */}
@@ -147,17 +185,21 @@ function VideoPlayer({ videoId }) {
               </div>
             </div>
             <button
-              className={`w-52 h-12 flex items-center justify-center capitalize px-3 py-2 mr-5 rounded-full text-base font-medium transition-all duration-300 subs ${isSubscribed[channelId] ? 'bg-yellow-700 text-gray-100 hover:bg-yellow-600' : 'bg-red-600 text-gray-100 hover:bg-red-500'} subscribe-button ${buttonClicked ? 'clicked' : ''}`}
+              className={`w-52 h-12 flex items-center justify-center capitalize px-3 py-2 mr-5 rounded-full text-base font-medium transition-all duration-300 subs ${
+                isSubscribed[channelId]
+                  ? 'bg-yellow-700 text-gray-100 hover:bg-yellow-600'
+                  : 'bg-red-600 text-gray-100 hover:bg-red-500'
+              } subscribe-button ${buttonClicked ? 'clicked' : ''}`}
               onClick={handleSubscription}
               disabled={loading}
             >
-              {
-                subLoading ? (
-                  <FaSpinner className="animate-spin text-xl" />
-                ) : (
-                   isSubscribed[channelId] ? "Unsubscribe" : "Subscribe"
-                )
-              }
+              {subLoading ? (
+                <FaSpinner className="animate-spin text-xl" />
+              ) : isSubscribed[channelId] ? (
+                'Unsubscribe'
+              ) : (
+                'Subscribe'
+              )}
             </button>
           </div>
         </div>

@@ -147,7 +147,7 @@ function Comment({ videoId }) {
         </div>
       </div>
       <form
-        className="z-10 absolute bottom-0 left-0 w-full px-4 py-2 bg-gray-200 border-t-2 rounded-b-lg flex"
+        className="z-1 absolute bottom-0 left-0 w-full px-4 py-2 bg-gray-200 border-t-2 rounded-b-lg flex"
         onSubmit={postComment}
       >
         <input
