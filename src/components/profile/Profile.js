@@ -6,11 +6,10 @@ import { MdOutlineModeEditOutline } from 'react-icons/md';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../loader/Loader';
-import { FaExclamationCircle } from "react-icons/fa";
+import { FaExclamationCircle } from 'react-icons/fa';
 
 function Profile() {
   const [showDeletePopup, setShowDeletePopup] = useState(false);
-  const [showPasswordPopup, setShowPasswordPopup] = useState(false);
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [deleteEmail, setDeleteEmail] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -234,7 +233,6 @@ function Profile() {
       setPassError(error.message);
     } finally {
       setPassLoading(false);
-      setShowPasswordPopup(false);
       navigate('/profile');
     }
   };
@@ -392,32 +390,114 @@ function Profile() {
           <p className="mt-1 text-lg text-gray-700">{userData.email}</p>
         </div>
 
-        <div className='flex gap-4 mb-20 mt-10'>
-          {/* Password */}
-          <button
-            onClick={() => setShowPasswordPopup(true)}
-            className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-md shadow-md flex items-center"
-          >
-            <p>Change Password</p>
-          </button>
+        <div className="flex gap-4 mb-20 mt-10">
           {/* Edit profile */}
           <button
             onClick={() => setShowEditPopup(true)}
-            className="mt-6 px-4 py-2 bg-yellow-600 text-white rounded-md shadow-md flex items-center"
+            className="mt-6 px-4 py-2 bg-orange-500 text-white rounded-md shadow-md flex items-center"
           >
             <p>Edit Profile</p>
           </button>
-          {/* Delete */}
-          <button
-            onClick={() => setShowDeletePopup(true)}
-            className="mt-6 px-4 py-2 bg-red-600 text-white rounded-md shadow-md flex items-center"
-          >
-            <p>Delete Account</p>
-            <RiDeleteBin6Line className="text-lg ml-2" />
-          </button>
         </div>
-        {/* {error && <p className="text-red-500 mt-2">{error}</p>}
-        {success && <p className="text-green-500 mt-2">{success}</p>} */}
+      </div>
+      {/* Password */}
+      <div className="w-full bg-gray-300 p-5 rounded-md mb-5">
+      <h3 className="text-xl font-semibold mb-2">Password</h3>
+        <form onSubmit={handleChangePassword}>
+          <div className="w-full flex items-start justify-between">
+            <div>
+              <label
+                className="block text-sm font-medium text-gray-700"
+                htmlFor="oldPassword"
+              >
+                Old Password
+              </label>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                name="oldPassword"
+                value={passwordData.oldPassword}
+                onChange={handlePasswordInputChange}
+                className="w-72 mt-1 p-2 border rounded-md shadow-md bg-gray-50"
+                required
+              />
+            </div>
+            <div>
+              <label
+                className="block text-sm font-medium text-gray-700"
+                htmlFor="newPassword"
+              >
+                New Password
+              </label>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                name="newPassword"
+                value={passwordData.newPassword}
+                onChange={handlePasswordInputChange}
+                className="w-72 mt-1 p-2 border rounded-md shadow-md bg-gray-50"
+                required
+              />
+            </div>
+            <div className="relative">
+              <label
+                className="block text-sm font-medium text-gray-700"
+                htmlFor="confirmNewPassword"
+              >
+                Confirm New Password
+              </label>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                name="confirmNewPassword"
+                value={passwordData.confirmNewPassword}
+                onChange={handlePasswordInputChange}
+                className="w-72 mt-1 p-2 border rounded-md shadow-md bg-gray-50"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute top-9 right-3 text-gray-600"
+              >
+                {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+              </button>
+            </div>
+          </div>
+          {passError && <p className="text-red-500 mt-2">{passError}</p>}
+          <div className="flex justify-end mt-5">
+            <button
+              type="submit"
+              className="px-4 py-2 bg-orange-500 text-white rounded-md shadow-md w-20 flex items-center justify-center"
+              disabled={passLoading}
+            >
+              {passLoading ? (
+                <FaSpinner className="animate-spin text-xl" />
+              ) : (
+                'Update'
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+      {/* Delete */}
+      <div className="w-full bg-red-300 p-5 rounded-md">
+        <div className="w-full">
+          <h3 className="text-xl font-semibold mb-2">Delete Account</h3>
+          <p>
+            Would you like to delete account?<br></br>
+            Deleting your account is permanent and will remove all the contain
+            associated with it.
+            <span className="italic">
+              Your Follower, Videos, Subscription, Watch History, Playlists.
+            </span>
+            And you no more able to recover it!
+          </p>
+        </div>
+        <button
+          onClick={() => setShowDeletePopup(true)}
+          className="mt-5 px-4 py-3 bg-red-600 text-white rounded-md shadow-md flex items-center italic"
+        >
+          I want to delete
+          <RiDeleteBin6Line className="text-lg ml-2" />
+        </button>
       </div>
 
       {/* EDIT USER DATA POPUP */}
@@ -477,97 +557,16 @@ function Profile() {
         </div>
       )}
 
-      {/* SHOW CHANGE PASSWORD POPUP */}
-      {showPasswordPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-            <h2 className="text-xl font-bold mb-4">Create New Password</h2>
-            <p className="mb-4">Please enter user password here:</p>
-            <form onSubmit={handleChangePassword}>
-              <label
-                className="block text-sm font-medium text-gray-700"
-                htmlFor="oldPassword"
-              >
-                Old Password
-              </label>
-              <input
-                type={showPassword ? 'text' : 'password'}
-                name="oldPassword"
-                value={passwordData.oldPassword}
-                onChange={handlePasswordInputChange}
-                className="mt-1 p-2 w-full border rounded-md shadow-sm"
-                required
-              />
-              <label
-                className="block text-sm font-medium text-gray-700 mt-4"
-                htmlFor="newPassword"
-              >
-                New Password
-              </label>
-              <input
-                type={showPassword ? 'text' : 'password'}
-                name="newPassword"
-                value={passwordData.newPassword}
-                onChange={handlePasswordInputChange}
-                className="mt-1 p-2 w-full border rounded-md shadow-sm"
-                required
-              />
-              <div className="relative">
-                <label
-                  className="block text-sm font-medium text-gray-700 mt-4"
-                  htmlFor="confirmNewPassword"
-                >
-                  Confirm New Password
-                </label>
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  name="confirmNewPassword"
-                  value={passwordData.confirmNewPassword}
-                  onChange={handlePasswordInputChange}
-                  className="mt-1 p-2 w-full border rounded-md shadow-sm"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-9 text-gray-600"
-                >
-                  {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
-                </button>
-              </div>
-              {passError && <p className="text-red-500 mt-2">{passError}</p>}
-              <div className="flex justify-end mt-4">
-                <button
-                  onClick={() => setShowPasswordPopup(false)}
-                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-red-600 text-white rounded-md shadow-md w-44 flex items-center justify-center"
-                  disabled={passLoading}
-                >
-                  {passLoading ? (
-                    <FaSpinner className="animate-spin text-xl" />
-                  ) : (
-                    'Change Password'
-                  )}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
       {/* SHOW DELETE POPUP */}
       {showDeletePopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-lg">
-            <div className='w-full flex items-center justify-center'>
-            <FaExclamationCircle className='w-16 h-16 text-red-700 text-center mb-4'/>
+            <div className="w-full flex items-center justify-center">
+              <FaExclamationCircle className="w-16 h-16 text-red-700 text-center mb-4" />
             </div>
-            <h2 className="text-xl font-bold mb-4 text-center">Confirm Delete Account</h2>
+            <h2 className="text-xl font-bold mb-4 text-center">
+              Confirm Delete Account
+            </h2>
             <p className="mb-4">
               Please enter your email to confirm account deletion:
             </p>
