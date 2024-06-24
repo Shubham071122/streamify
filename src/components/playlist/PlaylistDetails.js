@@ -150,7 +150,6 @@ const PlaylistDetails = () => {
 
     try {
       const token = localStorage.getItem('token');
-      console.log('plytoken:', token);
       const response = await axios.patch(
         `${process.env.REACT_APP_SERVER_URL}/playlist/remove/${videoId}/${playlistId}`,
         {},

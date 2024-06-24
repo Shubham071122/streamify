@@ -9,7 +9,7 @@ export const SubscriptionProvider = ({ children }) => {
   const [buttonClicked, setButtonClicked] = useState(false);
   const [subscribedChannels,setSubscribedChannels] = useState([]);
 
-  //*GETTING SUBSCRIBER NUMBER:
+  //*GETTING SUBSCRIBER COUNT:
 
   const fetchSubscriber = async (channelId,currentUserId) => {
     const token = localStorage.getItem('token');
@@ -46,7 +46,7 @@ export const SubscriptionProvider = ({ children }) => {
     }
   };
 
-  //* TOGGLE SUBSCRIDER
+  //* TOGGLE SUBSCRIBER
   const toggleSubscription = async (channelId) => {
     const token = localStorage.getItem('token');
 

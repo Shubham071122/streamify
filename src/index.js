@@ -8,6 +8,7 @@ import { UserProvider } from './context/UserContext';
 import { VideoProvider } from './context/VideoContext';
 import { Toaster } from 'react-hot-toast';
 import { PlaylistProvider } from './context/PlaylistContext';
+import { LikeProvider } from './context/LikeContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -15,10 +16,12 @@ root.render(
     <UserProvider>
       <PlaylistProvider>
         <VideoProvider>
+          <LikeProvider>
           <SubscriptionProvider>
             <App />
             <Toaster />
           </SubscriptionProvider>
+          </LikeProvider>
         </VideoProvider>
       </PlaylistProvider>
     </UserProvider>

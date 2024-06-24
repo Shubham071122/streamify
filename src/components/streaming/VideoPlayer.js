@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import './VideoPlayer.css';
 import { FcLikePlaceholder, FcLike } from 'react-icons/fc';
-import { RiPlayListAddFill,RiShareLine  } from 'react-icons/ri';
+import { RiPlayListAddFill, RiShareLine } from 'react-icons/ri';
 import { NavLink } from 'react-router-dom';
 import { useSubscription } from '../../context/SubscriptionContext';
 import axios from 'axios';
 import Loader from '../loader/Loader';
 import { FaSpinner } from 'react-icons/fa';
 import toast from 'react-hot-toast';
+import { useLike } from '../../context/LikeContext';
 
-function VideoPlayer({ videoId, onTogglePopup }) {
+function VideoPlayer({ videoId, onTogglePopup, handleOpenSharePopup }) {
   const {
     subscriberCount,
     isSubscribed,
@@ -17,11 +18,11 @@ function VideoPlayer({ videoId, onTogglePopup }) {
     fetchSubscriber,
     toggleSubscription,
   } = useSubscription();
+  const { likeCount, isLiked, fetchLike, toggleLike } = useLike();
   const [video, setVideo] = useState(null);
-  console.log("vvvv:",video);
+  console.log('vvvv:', video);
   const channelId = video?.owner._id;
   const currentUserId = localStorage.getItem('userId');
-  const [isLiked, setIsLiked] = useState(false);
   const [loading, setLoading] = useState(false);
   const [subLoading, setSubLoading] = useState(false);
   const [showPlaylistName, setShowPlaylistName] = useState(false);
@@ -34,7 +35,8 @@ function VideoPlayer({ videoId, onTogglePopup }) {
       return;
     }
     fetchSubscriber(channelId, currentUserId);
-  }, [channelId, currentUserId]);
+    fetchLike(videoId, currentUserId);
+  }, [channelId, currentUserId, videoId]);
 
   //* FETCHING VIDEO DETAILS:
   useEffect(() => {
@@ -83,6 +85,23 @@ function VideoPlayer({ videoId, onTogglePopup }) {
     }
   };
 
+  //* TOGGLE LIKE:
+  const handleLike = async (e) => {
+    e.preventDefault();
+    if (!videoId) return;
+    try {
+      await toggleLike(videoId);
+      if (isLiked[videoId]) {
+        toast.success('Video Unlike');
+      } else {
+        toast.success('Video Like');
+      }
+    } catch (error) {
+      console.log('Like error:', error);
+      toast.error('Something Went Wrong!');
+    }
+  };
+
   if (loading) {
     return (
       <div className="w-full">
@@ -94,6 +113,7 @@ function VideoPlayer({ videoId, onTogglePopup }) {
   if (!video) {
     return <div className="text-white">Video not found</div>;
   }
+
   return (
     <div className="w-full h-screen">
       {/* VIDEO */}
@@ -107,18 +127,23 @@ function VideoPlayer({ videoId, onTogglePopup }) {
       {/* DESCRIPTION */}
       <div className="border-[1px] border-white mt-10 rounded-xl p-4 desc-bg text-white min-w-[200px] max-w-[800px] w-[800px]">
         {/* ICON */}
-        <div className="w-full flex items-center gap-12 mb-10 ml-10 mt-2">
+        <div className="w-full flex items-start gap-12 mb-8 ml-10 mt-2">
           {/* LIKE */}
-          <button onClick={() => setIsLiked(!isLiked)}>
-            {isLiked ? (
-              <FcLike size={30} />
-            ) : (
-              <FcLikePlaceholder
-                size={30}
-                className="hover:text-red-500 transition-all 0.2s ease-in-out"
-              />
-            )}
-          </button>
+          <div className=''>
+            <button onClick={handleLike}>
+              {isLiked[videoId] ? (
+                <FcLike size={30} />
+              ) : (
+                <FcLikePlaceholder
+                  size={30}
+                  className="hover:text-red-500 transition-all 0.2s ease-in-out"
+                />
+              )}
+            </button>
+            <p className="text-gray-200 text-sm font-medium">
+              {likeCount[videoId]}&nbsp;&nbsp;Likes
+            </p>
+          </div>
           {/* PLAYLIST */}
           <div className="relative inline-block">
             <button
@@ -133,7 +158,7 @@ function VideoPlayer({ videoId, onTogglePopup }) {
               />
             </button>
             {showPlaylistName && (
-              <div className="absolute text-white bg-black p-1 shadow-md border border-gray-200 top-full mt-2 left-0 w-28 text-center font-light text-sm hover:transition-opacity ">
+              <div className="absolute text-white bg-black p-1 shadow-md border border-gray-200 top-full mt-2 left-0 w-20 text-center font-light text-xs hover:transition-opacity ">
                 Add Playlist
               </div>
             )}
@@ -144,15 +169,16 @@ function VideoPlayer({ videoId, onTogglePopup }) {
               className="focus:outline-none"
               onMouseEnter={() => setShowShareName(true)}
               onMouseLeave={() => setShowShareName(false)}
+              onClick={() => handleOpenSharePopup(true)}
             >
-              <RiShareLine 
+              <RiShareLine
                 size={26}
                 className="hover:text-red-200 transition-all duration-200 ease-in-out"
               />
             </button>
 
             {showShareName && (
-              <div className="absolute text-white bg-black p-1 shadow-md border border-gray-200 top-full mt-2 left-0 w-16 text-center font-light text-sm hover:transition-opacity ">
+              <div className="absolute text-white bg-black p-1 shadow-md border border-gray-200 top-full mt-2 left-0 w-12 text-center font-light text-xs hover:transition-opacity ">
                 Share
               </div>
             )}
@@ -178,7 +204,6 @@ function VideoPlayer({ videoId, onTogglePopup }) {
                 <NavLink>
                   <p className="text-wrap capitalize">{video.owner.fullName}</p>
                 </NavLink>
-                <p>{}</p>
                 <p className="text-gray-400 text-sm">
                   {subscriberCount[channelId]}&nbsp;&nbsp;&nbsp;subscribers
                 </p>

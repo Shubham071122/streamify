@@ -4,20 +4,18 @@ import toast from 'react-hot-toast';
 
 const PlaylistContext = createContext();
 
-export const PlaylistProvider = ({children}) => {
-    
+export const PlaylistProvider = ({ children }) => {
   const [playlists, setPlaylists] = useState([]);
   const [loading, setLoading] = useState(true);
   const [createLoading, setCreateLoading] = useState(false);
-
 
   //* FETCHING ALL PLAYLISTS:
   const fetchPlaylists = async () => {
     try {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
-      console.log("t:",token);
-      console.log("u:",userId);
+      console.log('t:', token);
+      console.log('u:', userId);
 
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/playlist/user/${userId}`,
@@ -37,7 +35,7 @@ export const PlaylistProvider = ({children}) => {
   };
 
   //* HANDLE CREATE PLAYLIST:
-  const createPlaylist = async (title,description) => {
+  const createPlaylist = async (title, description) => {
     setCreateLoading(true);
 
     try {
@@ -58,19 +56,17 @@ export const PlaylistProvider = ({children}) => {
         const newPlaylist = response.data.data;
         setPlaylists((prevPlaylists) => [...prevPlaylists, newPlaylist]);
         toast.success('Playlist created successfully!');
-        
       }
     } catch (error) {
       console.log('Error while creating playlist:', error);
       toast.error('Something went wrong!');
-    }finally {
-        setCreateLoading(false);
-      }
+    } finally {
+      setCreateLoading(false);
+    }
   };
 
   //*HANDLE ADD VIDEO IN PLAYLIST:
-  const addVideoInPlaylist  = async (videoId,playlistId) => {
-
+  const addVideoInPlaylist = async (videoId, playlistId) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.patch(
@@ -85,11 +81,18 @@ export const PlaylistProvider = ({children}) => {
           },
         },
       );
-      if (response.data && response.data.data) {
-        const newPlaylist = response.data.data;
-        setPlaylists((prevPlaylists) => [...prevPlaylists, newPlaylist]);
+      if (response.data && response.data.message === "Video is already in the playlist") {
+        toast('Video is already in the playlist!', {
+          icon: '⚠️',
+        });
+      } else if (response.data && response.data.data) {
+        const updatedPlaylist = response.data.data;
+        setPlaylists((prevPlaylists) =>
+          prevPlaylists.map((playlist) =>
+            playlist._id === updatedPlaylist._id ? updatedPlaylist : playlist
+          )
+        );
         toast.success('Video added successfully!');
-        
       }
     } catch (error) {
       console.log('Error while add vieo to playlist:', error);
@@ -97,10 +100,22 @@ export const PlaylistProvider = ({children}) => {
     }
   };
 
+  return (
+    <PlaylistContext.Provider
+      value={{
+        loading,
+        createLoading,
+        playlists,
+        setLoading,
+        setPlaylists,
+        createPlaylist,
+        fetchPlaylists,
+        addVideoInPlaylist,
+      }}
+    >
+      {children}
+    </PlaylistContext.Provider>
+  );
+};
 
-    return(
-        <PlaylistContext.Provider value={{loading,createLoading,playlists,setLoading,setPlaylists,createPlaylist,fetchPlaylists,addVideoInPlaylist}}>{children}</PlaylistContext.Provider>
-    )
-}
-
-export const usePlaylist = () => useContext(PlaylistContext)
+export const usePlaylist = () => useContext(PlaylistContext);
