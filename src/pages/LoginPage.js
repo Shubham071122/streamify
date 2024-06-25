@@ -69,7 +69,7 @@ const LoginPage = () => {
               value={credentials.password}
               onChange={handleChange}
               required
-              className="px-4 py-2 w-full rounded-md outline-none mb-1 mt-1 relative"
+              className={`px-4 py-2 w-full rounded-md outline-none mb-1 mt-1 relative ${showPassword === false ? '' : ''}`}
             />
 
             <button

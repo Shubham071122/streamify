@@ -14,16 +14,16 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <AuthProvider>
     <UserProvider>
-      <PlaylistProvider>
-        <VideoProvider>
-          <LikeProvider>
-          <SubscriptionProvider>
-            <App />
-            <Toaster />
-          </SubscriptionProvider>
-          </LikeProvider>
-        </VideoProvider>
-      </PlaylistProvider>
+        <PlaylistProvider>
+          <VideoProvider>
+            <LikeProvider>
+              <SubscriptionProvider>
+                <App />
+                <Toaster />
+              </SubscriptionProvider>
+            </LikeProvider>
+          </VideoProvider>
+        </PlaylistProvider>
     </UserProvider>
   </AuthProvider>,
 );

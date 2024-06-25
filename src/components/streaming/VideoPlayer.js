@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './VideoPlayer.css';
 import { FcLikePlaceholder, FcLike } from 'react-icons/fc';
 import { RiPlayListAddFill, RiShareLine } from 'react-icons/ri';
@@ -9,8 +9,10 @@ import Loader from '../loader/Loader';
 import { FaSpinner } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import { useLike } from '../../context/LikeContext';
+import { useVideo } from '../../context/VideoContext';
 
-function VideoPlayer({ videoId, onTogglePopup, handleOpenSharePopup }) {
+const VideoPlayer = ({ videoId, onTogglePopup, handleOpenSharePopup }) => {
+  const videoRef = useRef(null);
   const {
     subscriberCount,
     isSubscribed,
@@ -19,6 +21,8 @@ function VideoPlayer({ videoId, onTogglePopup, handleOpenSharePopup }) {
     toggleSubscription,
   } = useSubscription();
   const { likeCount, isLiked, fetchLike, toggleLike } = useLike();
+  const { viewCounts, fetchViewCount, incrementViewCount } = useVideo();
+  const [viewIncremented, setViewIncremented] = useState(false);
   const [video, setVideo] = useState(null);
   console.log('vvvv:', video);
   const channelId = video?.owner._id;
@@ -28,7 +32,7 @@ function VideoPlayer({ videoId, onTogglePopup, handleOpenSharePopup }) {
   const [showPlaylistName, setShowPlaylistName] = useState(false);
   const [showShareName, setShowShareName] = useState(false);
 
-  //* FETCHING SUBSCRIBER COUNT;
+  //* FETCHING SUBSCRIBER,LIKE,VIEW COUNT;
   useEffect(() => {
     if (!channelId) {
       console.error('Channel ID is not available.');
@@ -36,6 +40,7 @@ function VideoPlayer({ videoId, onTogglePopup, handleOpenSharePopup }) {
     }
     fetchSubscriber(channelId, currentUserId);
     fetchLike(videoId, currentUserId);
+    fetchViewCount(videoId);
   }, [channelId, currentUserId, videoId]);
 
   //* FETCHING VIDEO DETAILS:
@@ -63,6 +68,29 @@ function VideoPlayer({ videoId, onTogglePopup, handleOpenSharePopup }) {
 
     fetchVideoDetails();
   }, [videoId]);
+
+  //* INCREMENTING VIEW COUNT:
+  useEffect(() => {
+    const handleTimeUpdate = () => {
+      const video = videoRef.current;
+
+      if (video && video.currentTime >= 5 && !viewIncremented) {
+        incrementViewCount(videoId);
+        setViewIncremented(true); //to avoid multiple increment.
+      }
+    };
+    //HANDLE EVENT ON VIDEO:
+    const video = videoRef.current;
+    if (video) {
+      video.addEventListener('timeupdate', handleTimeUpdate);
+    }
+    // Clean up: Remove the event listener when the component unmounts or when dependencies change
+    return () => {
+      if (video) {
+        video.removeEventListener('timeupdate', handleTimeUpdate);
+      }
+    };
+  }, [viewIncremented, videoId, incrementViewCount]);
 
   //* TOGGLE SUBSCRIDER
   const handleSubscription = async (e) => {
@@ -101,6 +129,14 @@ function VideoPlayer({ videoId, onTogglePopup, handleOpenSharePopup }) {
       toast.error('Something Went Wrong!');
     }
   };
+  //*FOR DATE:
+  const formatDate = (isoDate) => {
+    const date = new Date(isoDate);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
 
   if (loading) {
     return (
@@ -119,6 +155,7 @@ function VideoPlayer({ videoId, onTogglePopup, handleOpenSharePopup }) {
       {/* VIDEO */}
       <div className="min-w-[200px] max-w-[800px] w-[800px]">
         <video
+          ref={videoRef}
           className=" w-full h-full rounded-xl box shad"
           src={video.videoFile}
           controls
@@ -127,61 +164,81 @@ function VideoPlayer({ videoId, onTogglePopup, handleOpenSharePopup }) {
       {/* DESCRIPTION */}
       <div className="border-[1px] border-white mt-10 rounded-xl p-4 desc-bg text-white min-w-[200px] max-w-[800px] w-[800px]">
         {/* ICON */}
-        <div className="w-full flex items-start gap-12 mb-8 ml-10 mt-2">
-          {/* LIKE */}
-          <div className=''>
-            <button onClick={handleLike}>
-              {isLiked[videoId] ? (
-                <FcLike size={30} />
-              ) : (
-                <FcLikePlaceholder
-                  size={30}
-                  className="hover:text-red-500 transition-all 0.2s ease-in-out"
+        <div className="w-full flex items-start justify-between mb-5 p-5">
+          {/* **LEFT PART** */}
+          <div className="w-full flex items-start gap-12">
+            {/* LIKE */}
+            <div className="flex flex-col items-center gap-1">
+              <button onClick={handleLike}>
+                {isLiked[videoId] ? (
+                  <FcLike size={30} />
+                ) : (
+                  <FcLikePlaceholder
+                    size={30}
+                    className="hover:text-red-500 transition-all 0.2s ease-in-out"
+                  />
+                )}
+              </button>
+              <div>
+              <p className="text-gray-200 text-sm font-medium">
+                {likeCount[videoId]}&nbsp;&nbsp;Likes
+              </p>
+              </div>
+            </div>
+            {/* PLAYLIST */}
+            <div className="relative inline-block">
+              <button
+                className="focus:outline-none"
+                onMouseEnter={() => setShowPlaylistName(true)}
+                onMouseLeave={() => setShowPlaylistName(false)}
+                onClick={() => onTogglePopup(true)}
+              >
+                <RiPlayListAddFill
+                  size={26}
+                  className="hover:text-red-200 transition-all duration-200 ease-in-out"
                 />
+              </button>
+              {showPlaylistName && (
+                <div className="absolute text-white bg-black p-1 shadow-md border border-gray-200 top-full mt-2 left-0 w-20 text-center font-light text-xs hover:transition-opacity ">
+                  Add Playlist
+                </div>
               )}
-            </button>
-            <p className="text-gray-200 text-sm font-medium">
-              {likeCount[videoId]}&nbsp;&nbsp;Likes
-            </p>
-          </div>
-          {/* PLAYLIST */}
-          <div className="relative inline-block">
-            <button
-              className="focus:outline-none"
-              onMouseEnter={() => setShowPlaylistName(true)}
-              onMouseLeave={() => setShowPlaylistName(false)}
-              onClick={() => onTogglePopup(true)}
-            >
-              <RiPlayListAddFill
-                size={26}
-                className="hover:text-red-200 transition-all duration-200 ease-in-out"
-              />
-            </button>
-            {showPlaylistName && (
-              <div className="absolute text-white bg-black p-1 shadow-md border border-gray-200 top-full mt-2 left-0 w-20 text-center font-light text-xs hover:transition-opacity ">
-                Add Playlist
-              </div>
-            )}
-          </div>
-          {/* SHARE */}
-          <div className="relative inline-block">
-            <button
-              className="focus:outline-none"
-              onMouseEnter={() => setShowShareName(true)}
-              onMouseLeave={() => setShowShareName(false)}
-              onClick={() => handleOpenSharePopup(true)}
-            >
-              <RiShareLine
-                size={26}
-                className="hover:text-red-200 transition-all duration-200 ease-in-out"
-              />
-            </button>
+            </div>
+            {/* SHARE */}
+            <div className="relative inline-block">
+              <button
+                className="focus:outline-none"
+                onMouseEnter={() => setShowShareName(true)}
+                onMouseLeave={() => setShowShareName(false)}
+                onClick={() => handleOpenSharePopup(true)}
+              >
+                <RiShareLine
+                  size={26}
+                  className="hover:text-red-200 transition-all duration-200 ease-in-out"
+                />
+              </button>
 
-            {showShareName && (
-              <div className="absolute text-white bg-black p-1 shadow-md border border-gray-200 top-full mt-2 left-0 w-12 text-center font-light text-xs hover:transition-opacity ">
-                Share
-              </div>
-            )}
+              {showShareName && (
+                <div className="absolute text-white bg-black p-1 shadow-md border border-gray-200 top-full mt-2 left-0 w-12 text-center font-light text-xs hover:transition-opacity ">
+                  Share
+                </div>
+              )}
+            </div>
+          </div>
+          {/* **RIGHT PART** */}
+          <div className='px-5 py-2 bg-gray-600 rounded-full shadow-sm shadow-white flex items-center justify-between gap-3'>
+            {/* VIEWS */}
+            <div>
+              <p className="text-gray-200 text-sm font-medium">
+                {viewCounts[videoId]}&nbsp;&nbsp;Views
+              </p>
+            </div>
+            {/* CREATED AT */}
+            <div>
+              <p className="text-sm text-gray-200 ml-2 italic">
+                {formatDate(video.createdAt)}
+              </p>
+            </div>
           </div>
         </div>
 
@@ -233,6 +290,6 @@ function VideoPlayer({ videoId, onTogglePopup, handleOpenSharePopup }) {
       </div>
     </div>
   );
-}
+};
 
 export default VideoPlayer;
