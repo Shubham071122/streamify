@@ -11,11 +11,10 @@ export const PlaylistProvider = ({ children }) => {
 
   //* FETCHING ALL PLAYLISTS:
   const fetchPlaylists = async () => {
+    setLoading(true);
     try {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
-      console.log('t:', token);
-      console.log('u:', userId);
 
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/playlist/user/${userId}`,

@@ -300,7 +300,8 @@ function Profile() {
   }
 
   return (
-    <div className="w-10/12 min-h-screen p-5 bg-gray-100 rounded-lg mx-auto relative pb-5 my-5">
+    <div className='my-3 mx-14'>
+    <div className="w-full min-h-screen p-5 bg-gray-100 rounded-lg relative pb-5">
       {/* TOP PART */}
       <div className="w-full mb-10">
         {/* COVER IMAGE */}
@@ -603,6 +604,7 @@ function Profile() {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }
