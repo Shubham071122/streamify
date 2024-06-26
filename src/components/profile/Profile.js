@@ -359,7 +359,7 @@ function Profile() {
       </div>
 
       {/* BOTTOM PART */}
-      <div className="mt-28 p-5 w-full bg-gray-200 mb-5">
+      <div className="mt-28 p-5 w-full bg-gray-300 mb-5 rounded-md">
         <h2 className="text-3xl font-bold text-gray-800">
           Profile Information
         </h2>
@@ -470,7 +470,7 @@ function Profile() {
               disabled={passLoading}
             >
               {passLoading ? (
-                <FaSpinner className="animate-spin text-xl" />
+                <FaSpinner className="animate-spin text-2xl" />
               ) : (
                 'Update'
               )}
