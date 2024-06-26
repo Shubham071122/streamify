@@ -359,43 +359,43 @@ function Profile() {
       </div>
 
       {/* BOTTOM PART */}
-      <div className="mt-28 px-5 w-full">
+      <div className="mt-28 p-5 w-full bg-gray-200 mb-5">
         <h2 className="text-3xl font-bold text-gray-800">
           Profile Information
         </h2>
         {/* Name */}
-        <div className="mt-6">
+        <div className="mt-6 flex items-center gap-4">
           <label
             className="block text-sm font-medium text-gray-700"
             htmlFor="fullName"
           >
             Name
           </label>
-          <p className="mt-1 text-lg text-gray-700">{userData.fullName}</p>
+          <p className="text-lg text-gray-700 border border-red-400 px-2 py-1 rounded-md bg-gray-50 shadow-sm">{userData.fullName}</p>
         </div>
         {/* Username */}
-        <div className="mt-6">
+        <div className="mt-6 flex items-center gap-4">
           <label className="block text-sm font-medium text-gray-700">
-            Username
+            Username 
           </label>
-          <p className="mt-1 text-lg text-gray-700">{userData.username}</p>
+          <p className="text-lg text-gray-700 border border-red-400 px-2 py-1 rounded-md bg-gray-50 shadow-sm">{userData.username}</p>
         </div>
         {/* Email */}
-        <div className="mt-6">
+        <div className="mt-6 flex items-center gap-4">
           <label
             className="block text-sm font-medium text-gray-700"
             htmlFor="email"
           >
             Email
           </label>
-          <p className="mt-1 text-lg text-gray-700">{userData.email}</p>
+          <p className="text-lg text-gray-700 border border-red-400 px-2 py-1 rounded-md bg-gray-50 shadow-sm">{userData.email}</p>
         </div>
 
-        <div className="flex gap-4 mb-20 mt-10">
+        <div className="flex justify-end">
           {/* Edit profile */}
           <button
             onClick={() => setShowEditPopup(true)}
-            className="mt-6 px-4 py-2 bg-orange-500 text-white rounded-md shadow-md flex items-center"
+            className="px-4 py-2 bg-orange-500 text-white rounded-md shadow-md flex items-center"
           >
             <p>Edit Profile</p>
           </button>
@@ -456,7 +456,7 @@ function Profile() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute top-9 right-3 text-gray-600"
+                className="absolute top-9 right-3 text-gray-500 text-lg"
               >
                 {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
               </button>
