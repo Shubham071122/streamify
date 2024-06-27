@@ -10,7 +10,6 @@ export const SubscriptionProvider = ({ children }) => {
   const [subscribedChannels,setSubscribedChannels] = useState([]);
 
   //*GETTING SUBSCRIBER COUNT:
-
   const fetchSubscriber = async (channelId,currentUserId) => {
     const token = localStorage.getItem('token');
     // console.log("token:",token);

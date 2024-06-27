@@ -50,7 +50,7 @@ const VideoPlayer = ({ videoId, onTogglePopup, handleOpenSharePopup }) => {
       try {
         const token = localStorage.getItem('token');
         const response = await axios.get(
-          `${process.env.REACT_APP_SERVER_URL}/videos/${videoId}`,
+          `${process.env.REACT_APP_SERVER_URL}/videos/v/${videoId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

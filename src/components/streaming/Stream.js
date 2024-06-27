@@ -42,14 +42,18 @@ function Stream() {
     setShowSharePopup(true);
   };
 
+  
   const handlePlaylistSelect = (playlistId) => {
+    console.log(`Selected Playlist ID: ${playlistId}`);
     setSelectedPlaylistId(playlistId);
   };
+
+  console.log("selectedPlaylistId:",selectedPlaylistId);
   const handleClose = () => {
     setSelectedPlaylistId(null);
     setShowAddPlaylistPopup(false);
     setShowSharePopup(false);
-  };
+  }
   //*HANDLE CLICK:
   const handleAddClick = async () => {
     if (!selectedPlaylistId) {
@@ -57,6 +61,8 @@ function Stream() {
       return;
     }
     setAddLoading(true);
+    console.log("videOOOOid:",videoId);
+    console.log("selectedPlaylistId:",selectedPlaylistId);
     try {
       await addVideoInPlaylist(videoId, selectedPlaylistId);
     } catch (error) {
@@ -74,6 +80,7 @@ function Stream() {
     const { name, value } = e.target;
     setPlaylistData((prevData) => ({ ...prevData, [name]: value }));
   };
+
   //* HANDLE SUBMIT:
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -126,10 +133,10 @@ function Stream() {
                   .map((playlist) => (
                     <div
                       key={playlist._id}
-                      className={`bg-white p-4 rounded-lg shadow-md cursor-pointer w-full transition-colors ${
+                      className={`p-4 rounded-lg shadow-md cursor-pointer w-full transition-colors ${
                         selectedPlaylistId === playlist._id
-                          ? 'bg-red-200'
-                          : 'hover:bg-gray-100'
+                          ? 'bg-red-100'
+                          : 'bg-white hover:bg-gray-100'
                       }`}
                       onClick={() => handlePlaylistSelect(playlist._id)}
                     >

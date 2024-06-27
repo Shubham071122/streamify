@@ -45,13 +45,13 @@ const PlaylistDetails = () => {
         );
         const playlistData = response.data.data;
         setPlaylist(playlistData[0]); // we do [0] this because response from backed is an array.
-        // console.log(playlistData[0].video);
+        // console.log(,playlistData[0].video);
 
         //FETCHING VIDEO:
         const videoDetails = await Promise.all(
           playlistData[0].video?.map(async (videoId) => {
             const videoResponse = await axios.get(
-              `${process.env.REACT_APP_SERVER_URL}/videos/${videoId}`,
+              `${process.env.REACT_APP_SERVER_URL}/videos/v/${videoId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -234,16 +234,16 @@ const PlaylistDetails = () => {
               >
                 <div
                   onClick={() => navigate(`/video/${video._id}`)}
-                  className="w-72 h-40 shadow-md cursor-pointer"
+                  className="w-2/6 h-44 shadow-md cursor-pointer"
                 >
                   <img
                     src={video.thumbnail}
                     alt={video.title}
                     size={50}
-                    className="w-72 h-40 object-cover rounded-md mr-4 border border-red-400"
+                    className="w-full h-44 object-cover rounded-md mr-4 border border-red-400"
                   />
                 </div>
-                <div className="flex flex-col ml-5 mt-3 w-8/12">
+                <div className="flex flex-col ml-5 mt-3 w-4/6">
                   <h3 className="text-xl font-bold flex flex-wrap mb-2">
                     {video.title.length > 150
                       ? `${video.title.substring(0, 150)}...`

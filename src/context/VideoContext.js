@@ -8,6 +8,7 @@ export const VideoProvider = ({ children }) => {
   const [errors, setErrors] = useState('');
   const [loading, setLoading] = useState(false);
   const [viewCounts, setViewCounts] = useState({});
+  const [userVideos,setUserVideos] = useState([]);
 
   //* FETCHING VIDEO FOR HOME SCREEN:
   const fetchVideos = async () => {
@@ -101,10 +102,30 @@ export const VideoProvider = ({ children }) => {
     }
   };
 
+  //* FETCHING USER VIDEO FRO DASHBOARD:
+  const fetchUserVideos = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/videos/user-videos`,
+        {
+          headers:{
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      console.log("Usevideos:",response);
+      if(response.data && response.data.data){
+        setUserVideos(response.data.data);
+      }
+    } catch (error) {
+      console.log("Error fetching user videos:",error);
+    }
+  }
 
   return (
     <VideoContext.Provider
-      value={{ videos, errors, loading,viewCounts,  fetchVideos, fetchVideoByQuery,fetchViewCount,  incrementViewCount }}
+      value={{ videos, errors, loading,viewCounts, userVideos, fetchVideos, fetchVideoByQuery,fetchViewCount,  incrementViewCount, fetchUserVideos }}
     >
       {children}
     </VideoContext.Provider>

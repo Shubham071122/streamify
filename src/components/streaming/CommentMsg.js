@@ -40,6 +40,7 @@ function CommentMsg({ comment, currentUserId, comments, setComments }) {
   };
   //** Toggle menu */
   const toggleMenu = () => {
+    console.log("mernuOpenBef:",menuOpen)
     setMenuOpen(!menuOpen);
   };
 
@@ -96,6 +97,7 @@ function CommentMsg({ comment, currentUserId, comments, setComments }) {
       console.log("Error while deleting comment:", error.message);
     }
   };
+  console.log("mernuOpenAF:",menuOpen)
 
   return (
     <div className="w-full py-5 px-2 flex gap-3 border-b-2">
