@@ -17,7 +17,7 @@ function Video({ video }) {
         </div>
 
         {/* BOTTOM */}
-        <div className="w-full flex my-2 mx-2">
+        <div className="w-full flex my-2 mx-2 pl-2 pr-4">
           <div className="w-10 h-10 flex-shrink-0">
             <NavLink>
               <img
@@ -35,9 +35,9 @@ function Video({ video }) {
                 : video.title}
             </p>
             <NavLink>
-              <p className="text-gray-400 text-sm hover:text-white transition-all 0.2s ease">
+              <span className="text-gray-400 text-sm hover:text-gray-300 transition-all 0.2s ease">
                 {video.owner.fullName}
-              </p>
+              </span>
             </NavLink>
             <p></p>
           </div>

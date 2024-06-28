@@ -1,0 +1,24 @@
+/* UploadVideo.css */
+@keyframes dropConfetti {
+    0% {
+      transform: translateY(-100vh) rotate(0deg);
+    }
+    100% {
+      transform: translateY(100vh) rotate(360deg);
+    }
+  }
+  
+  .confetti {
+    position: fixed;
+    top: 0;
+    width: 10px;
+    height: 10px;
+    background: red;
+    animation: dropConfetti 3s linear infinite;
+    opacity: 0;
+  }
+  
+  .confetti.show {
+    opacity: 1;
+  }
+  

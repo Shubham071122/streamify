@@ -21,6 +21,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(false); // Set loading to false after checking token
   }, []);
 
+  //* LOGIN
   const login = async (credentials) => {
     try {
       console.log("Process:", process.env.REACT_APP_SERVER_URL);
@@ -42,6 +43,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  //* REGISTER
   const register = async (formData) => {
     try {
       const response = await axios.post(

@@ -19,6 +19,7 @@ import Profile from './components/profile/Profile';
 import ForgotPassword from './auth/ForgotPassword';
 import ResetPassword from './auth/ResetPassword';
 import PlaylistDetails from './components/playlist/PlaylistDetails';
+import UploadVideo from './components/dashboard/UploadVideo';
 
 function App() {
   const { isAuthenticated } = useContext(AuthContext);
@@ -48,6 +49,7 @@ function App() {
               <Route path="video/:videoId" element={<Stream />} />
               <Route path="profile" element={<Profile />} />
               <Route path="dashboard" element={<Dashboard />} />
+              <Route path="dashboard/upload-video" element={<UploadVideo />} />
               <Route path="subscription" element={<Subscription />} />
               <Route path="playlists" element={<Playlists />} />
               <Route path="playlists/:playlistId" element={<PlaylistDetails />} />

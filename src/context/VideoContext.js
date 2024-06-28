@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { createContext, useContext, useState } from 'react';
+import toast from 'react-hot-toast';
 
 const VideoContext = createContext();
 
@@ -123,9 +124,60 @@ export const VideoProvider = ({ children }) => {
     }
   }
 
+  //* UPDATE USER VIDEO:
+  const updateUserVideo = async(videoId,formData) => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.patch(
+        `${process.env.REACT_APP_SERVER_URL}/videos/update-video/${videoId}`,
+        {
+          title: formData.title,
+          description: formData.description,
+          thumbnail: formData.thumbnail,
+        },
+        {
+          headers:{
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          }
+        }
+      )
+      if(response.data && response.data.data){
+        console.log("UpdatedUserVideo:",response);
+        toast.success("Video updated successful!")
+      }
+    } catch (error) {
+      console.log("Error while updating video:",error);
+      toast.error("Something went wrong!");
+    }
+  };
+
+
+  //* DELETE USER VIDEO:
+  const deleteUserVideo = async(videoId) => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.delete(
+        `${process.env.REACT_APP_SERVER_URL}/videos/delete-video/${videoId}`,
+        {
+          headers:{
+            Authorization: `Bearer ${token}`,
+          }
+        }
+      )
+      if(response.data && response.data.data){
+        console.log("UpdatedUserVideo:",response);
+        toast.success("Video deleted successful!")
+      }
+    } catch (error) {
+      console.log("Error while updating video:",error);
+      toast.error("Something went wrong!");
+    }
+  };
+
   return (
     <VideoContext.Provider
-      value={{ videos, errors, loading,viewCounts, userVideos, fetchVideos, fetchVideoByQuery,fetchViewCount,  incrementViewCount, fetchUserVideos }}
+      value={{ videos, errors, loading,viewCounts, userVideos, fetchVideos, fetchVideoByQuery,fetchViewCount,  incrementViewCount, fetchUserVideos, updateUserVideo,deleteUserVideo }}
     >
       {children}
     </VideoContext.Provider>
