@@ -161,11 +161,14 @@ function Dashboard() {
       <div className="w-full min-h-screen bg-gray-200 px-10 rounded-lg py-5">
         {/* TOP PART */}
         <div className="w-full flex items-center justify-between border-b-2 border-black py-10">
-          {channelData.fullName && (
+          {channelData.fullName ? (
             <h2 className="text-4xl font-bold text-gray-700">{`${
               channelData.fullName.split(' ')[0]
             }'s Dashboard`}</h2>
-          )}
+          ):(
+            <h2>Dashboard</h2>
+          )
+        }
           <div className="flex items-center flex-col justify-center">
             <div className="w-16 h-16 bg-gray-300 rounded-full overflow-hidden mr-4">
               <img
@@ -215,18 +218,18 @@ function Dashboard() {
                         <img
                           src={video.thumbnail}
                           alt={video.title}
-                          className="w-full h-full object-cover rounded-md border border-red-400"
+                          className="w-full h-28 object-cover rounded-md border border-red-400"
                         />
                       </div>
                       <div className="flex flex-col ml-5 w-2/3 flex-wrap">
                         <h3 className="text-xl font-bold mb-2 text-gray-800 text-wrap">
-                          {video.title.length > 100
-                            ? `${video.title.substring(0, 100)}...`
+                          {video.title.length > 25
+                            ? `${video.title.substring(0, 25)}...`
                             : video.title}
                         </h3>
                         <p className="text-gray-700 text-wrap" >
-                          {video.description.length > 100
-                            ? `${video.description.substring(0, 100)}...`
+                          {video.description.length > 40
+                            ? `${video.description.substring(0, 40)}...`
                             : video.description}
                         </p>
                       </div>

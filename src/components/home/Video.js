@@ -19,7 +19,7 @@ function Video({ video }) {
         {/* BOTTOM */}
         <div className="w-full flex my-2 mx-2 pl-2 pr-4">
           <div className="w-10 h-10 flex-shrink-0">
-            <NavLink>
+            <NavLink to={`user/${video.owner._id}`}>
               <img
                 src={video.owner.avatar}
                 alt=""
@@ -34,7 +34,7 @@ function Video({ video }) {
                 ? `${video.title.substring(0, 50)}...`
                 : video.title}
             </p>
-            <NavLink>
+            <NavLink to={`user/${video.owner._id}`}>
               <span className="text-gray-400 text-sm hover:text-gray-300 transition-all 0.2s ease">
                 {video.owner.fullName}
               </span>

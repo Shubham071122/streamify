@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { FaSpinner, FaTrash } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import { RiUploadCloud2Fill } from "react-icons/ri";
+import coverPlaceholder from '../../assets/cover-placeholder.png';
 
 function UploadVideo() {
   const [formData, setFormData] = useState({
@@ -170,7 +171,7 @@ function UploadVideo() {
                   style={{
                     backgroundImage: newThumbnail
                       ? `url(${newThumbnail})`
-                      : `url(${formData.thumbnail})`,
+                      : `url(${coverPlaceholder})`,
                   }}
                   onClick={() => document.getElementById('thumbnailInput').click()}
                 >
@@ -199,6 +200,9 @@ function UploadVideo() {
                 <div
                   className="w-96 h-60 border-2 border-gray-300 rounded-lg cursor-pointer overflow-hidden relative bg-center bg-cover"
                   onClick={() => document.getElementById('videoInput').click()}
+                  style={{
+                    backgroundImage: !newVideo && `url(${coverPlaceholder})`,
+                  }}
                 >
                   <input
                     type="file"

@@ -157,7 +157,7 @@ function CommentMsg({ comment, currentUserId, comments, setComments }) {
                 type="text"
                 value={updatedContent}
                 onChange={(e) => setUpdatedContent(e.target.value)}
-                className="w-full p-2 border-2 border-gray-300 rounded outline-none"
+                className="w-full p-2 border-2 border-gray-300 rounded outline-none mt-2"
               />
               <button
                 onClick={saveUpdate}

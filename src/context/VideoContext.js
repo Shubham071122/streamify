@@ -103,7 +103,7 @@ export const VideoProvider = ({ children }) => {
     }
   };
 
-  //* FETCHING USER VIDEO FRO DASHBOARD:
+  //* FETCHING USER VIDEO FOR DASHBOARD:
   const fetchUserVideos = async () => {
     const token = localStorage.getItem("token");
     try {

@@ -20,6 +20,7 @@ import ForgotPassword from './auth/ForgotPassword';
 import ResetPassword from './auth/ResetPassword';
 import PlaylistDetails from './components/playlist/PlaylistDetails';
 import UploadVideo from './components/dashboard/UploadVideo';
+import UserProfile from './components/userProfile/UserProfile';
 
 function App() {
   const { isAuthenticated } = useContext(AuthContext);
@@ -55,7 +56,7 @@ function App() {
               <Route path="playlists/:playlistId" element={<PlaylistDetails />} />
               <Route path="watch-history" element={<WatchHistory />} />
               <Route path="about" element={<About />} />
-              <Route path="user/:userId"/>
+              <Route path="user/:userId" element={<UserProfile/>}/>
             </Route>
           )}
           <Route path="*" element={<NoPage />} />

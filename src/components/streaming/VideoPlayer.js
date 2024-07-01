@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useId } from 'react';
 import './VideoPlayer.css';
 import { FcLikePlaceholder, FcLike } from 'react-icons/fc';
 import { RiPlayListAddFill, RiShareLine } from 'react-icons/ri';
@@ -248,7 +248,7 @@ const VideoPlayer = ({ videoId, onTogglePopup, handleOpenSharePopup }) => {
           <div className="w-full flex items-center justify-between">
             <div className="w-full flex my-4">
               <div className="w-10 h-10 flex-shrink-0 mr-4">
-                <NavLink>
+                <NavLink to={`/user/${currentUserId}`}>
                   <img
                     src={video.owner.avatar}
                     alt=""
@@ -258,7 +258,7 @@ const VideoPlayer = ({ videoId, onTogglePopup, handleOpenSharePopup }) => {
               </div>
 
               <div className="text-white font-medium flex-grow ">
-                <NavLink>
+                <NavLink to={`/user/${currentUserId}`}>
                   <p className="text-wrap capitalize">{video.owner.fullName}</p>
                 </NavLink>
                 <p className="text-gray-400 text-sm">
