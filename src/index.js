@@ -9,9 +9,12 @@ import { VideoProvider } from './context/VideoContext';
 import { Toaster } from 'react-hot-toast';
 import { PlaylistProvider } from './context/PlaylistContext';
 import { LikeProvider } from './context/LikeContext';
+import { BrowserRouter} from 'react-router-dom';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+  <BrowserRouter>
   <AuthProvider>
     <UserProvider>
         <PlaylistProvider>
@@ -25,7 +28,8 @@ root.render(
           </VideoProvider>
         </PlaylistProvider>
     </UserProvider>
-  </AuthProvider>,
+  </AuthProvider>
+  </BrowserRouter>
 );
 
 // If you want to start measuring performance in your app, pass a function

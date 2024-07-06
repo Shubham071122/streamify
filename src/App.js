@@ -33,7 +33,7 @@ function App() {
 
   return (
     <>
-      <Router>
+      {/* <Router> */}
         <Routes>
           {/* Unprotected Routes */}
           <Route path="/login" element={<LoginPage />} />
@@ -61,7 +61,7 @@ function App() {
           )}
           <Route path="*" element={<NoPage />} />
         </Routes>
-      </Router>
+      {/* </Router> */}
     </>
   );
 }
