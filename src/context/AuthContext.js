@@ -352,7 +352,7 @@ export const AuthProvider = ({ children }) => {
       console.log('Error refreshing auth token:', err);
       setToken(null);
       setIsAuthenticated(false);
-      navigate('/login');
+      navigate('/');
     }
   };
 
