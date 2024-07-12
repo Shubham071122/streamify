@@ -22,7 +22,7 @@ export const SubscriptionProvider = ({ children }) => {
           },
         },
       );
-      console.log('Subscriber:', response);
+      // console.log('Subscriber:', response);
       // Set the subscriber count in the state
       if (response.data && response.data.data) {
         setSubscriberCount((prevCounts) => ({
@@ -49,7 +49,7 @@ export const SubscriptionProvider = ({ children }) => {
   const toggleSubscription = async (channelId) => {
     const token = localStorage.getItem('token');
 
-    console.log('token:', token);
+    // console.log('token:', token);
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/subscriptions/c/${channelId}`,
@@ -60,7 +60,7 @@ export const SubscriptionProvider = ({ children }) => {
           },
         },
       );
-      console.log('subscribed:', response);
+      // console.log('subscribed:', response);
       // Toggle the subscription state
       setIsSubscribed((prevIsSubscribed) => {
         const newIsSubscribed = !prevIsSubscribed[channelId];
@@ -99,7 +99,7 @@ export const SubscriptionProvider = ({ children }) => {
           },
         },
       );
-      console.log("Channels res:",response);
+      // console.log("Channels res:",response);
       // Set the channels in the state
       if (response.data && response.data.data) {
         setSubscribedChannels(response.data.data);

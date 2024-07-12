@@ -19,7 +19,7 @@ export const UserProvider = ({children}) => {
                   },
                 },
               );
-              console.log("channel data res:",response);
+              // console.log("channel data res:",response);
               if(response.data.data){
                 setChannelData(response.data.data)
               }

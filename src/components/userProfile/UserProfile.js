@@ -49,7 +49,7 @@ function UserProfile() {
                           className="w-full h-40 object-cover rounded-md border border-red-400"
                         />
                       </div>
-                      <div className="flex flex-col ml-5 w-2/3 flex-wrap mt-5 ml-4">
+                      <div className="flex flex-col w-2/3 flex-wrap mt-5 ml-4">
                         <h3 className="text-xl font-bold mb-2 text-gray-800 text-wrap">
                           {video.title.length > 100
                             ? `${video.title.substring(0, 100)}...`

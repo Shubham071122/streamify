@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    console.log('Token read from localStorage:', token);
+    // console.log('Token read from localStorage:', token);
 
     if (token) {
       setIsAuthenticated(true);
@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
   //* LOGIN
   const login = async (credentials) => {
     try {
-      console.log('Process:', process.env.REACT_APP_SERVER_URL);
+      // console.log('Process:', process.env.REACT_APP_SERVER_URL);
       const response = await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/users/login`,
         credentials,
@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
 
       const data = response.data.data;
 
-      console.log('Data user: ', data.user);
+      // console.log('Data user: ', data.user);
       localStorage.setItem('userId', data.user._id);
       localStorage.setItem('token', data.accessToken);
       setIsAuthenticated(true);
@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }) => {
           },
         },
       );
-      console.log('Register successful:', response.data);
+      // console.log('Register successful:', response.data);
     } catch (error) {
       console.log('Error during registration', error);
     }

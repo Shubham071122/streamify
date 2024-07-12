@@ -68,13 +68,13 @@ function Dashboard() {
       thumbnail: userVideos[index].thumbnail,
     }); // <-- Populate form data
     setShowEditPopup(true);
-    console.log('hve:', index);
-    console.log('Edit mode on');
+    // console.log('hve:', index);
+    // console.log('Edit mode on');
   };
 
   //* HANDLE DELETE VIDEO;
   const handleDelete = async () => {
-    console.log("delId:",userVideos[pIndex]._id);
+    // console.log("delId:",userVideos[pIndex]._id);
     setDelLoading(true);
     try {
       await deleteUserVideo(userVideos[pIndex]._id);

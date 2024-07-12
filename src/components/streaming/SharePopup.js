@@ -32,7 +32,7 @@ const SharePopup = ({ showSharePopup, handleClose }) => {
             }
           } else {
             // Handle other platforms like email, Instagram, LinkedIn, etc.
-            console.log('Sharing via:', platform);
+            // console.log('Sharing via:', platform);
           }
         } catch (error) {
           console.error('Error sharing:', error);

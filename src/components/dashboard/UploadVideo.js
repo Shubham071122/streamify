@@ -69,7 +69,7 @@ function UploadVideo() {
         }
       )
       if (response.data && response.data.data) {
-        console.log("PublishdUserVideo:", response);
+        // console.log("PublishdUserVideo:", response);
         setShowConfetti(true); // Show the confetti
         toast.success("Video published successfully!");
       }

@@ -37,7 +37,7 @@ function RegisterPage() {
     if (!formData.username) newErrors.username = 'Username is required!';
     if (!formData.password) newErrors.password = 'Password is required!';
     if (!formData.avatar) newErrors.avatar = 'Avatar is required!';
-    console.log("formdavt:",formData.avatar);
+    // console.log("formdavt:",formData.avatar);
     if (!formData.coverImage) newErrors.coverImage = 'CoverImage is required!';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -53,7 +53,7 @@ function RegisterPage() {
     };
     try {
       const response = await register(formData);
-      console.log('register res:', response);
+      // console.log('register res:', response);
       toast.success('Accout created successfully!');
       navigate('/login');
     } catch (error) {

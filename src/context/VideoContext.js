@@ -49,7 +49,7 @@ export const VideoProvider = ({ children }) => {
           },
         },
       );
-      console.log('Res vid:', response);
+      // console.log('Res vid:', response);
       if (response.data && response.data.message.videos) {
         setVideos(response.data.message.videos);
       }
@@ -115,7 +115,7 @@ export const VideoProvider = ({ children }) => {
           },
         },
       )
-      console.log("Usevideos:",response);
+      // console.log("Usevideos:",response);
       if(response.data && response.data.data){
         setUserVideos(response.data.data);
       }
@@ -143,7 +143,7 @@ export const VideoProvider = ({ children }) => {
         }
       )
       if(response.data && response.data.data){
-        console.log("UpdatedUserVideo:",response);
+        // console.log("UpdatedUserVideo:",response);
         toast.success("Video updated successful!")
       }
     } catch (error) {
@@ -166,7 +166,7 @@ export const VideoProvider = ({ children }) => {
         }
       )
       if(response.data && response.data.data){
-        console.log("UpdatedUserVideo:",response);
+        // console.log("UpdatedUserVideo:",response);
         toast.success("Video deleted successful!")
       }
     } catch (error) {

@@ -31,7 +31,7 @@ function Comment({ videoId }) {
         );
 
         const data = response.data.message.comments;
-        console.log('comment data:', data);
+        // console.log('comment data:', data);
         if (Array.isArray(data)) {
           setComments(data);
         } else {
@@ -73,8 +73,8 @@ function Comment({ videoId }) {
         },
       );
 
-      console.log('Response:', response);
-      console.log('Response:', response.data.data.content);
+      // console.log('Response:', response);
+      // console.log('Response:', response.data.data.content);
 
       if (response.data.data && response.data.data.content) {
         // Fetch updated comments from server
@@ -88,7 +88,7 @@ function Comment({ videoId }) {
         );
 
         const updatedData = updatedResponse.data.message.comments;
-        console.log('updatedData:', updatedData);
+        // console.log('updatedData:', updatedData);
         if (Array.isArray(updatedData)) {
           setComments(updatedData);
         } else {

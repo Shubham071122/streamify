@@ -44,11 +44,11 @@ function Stream() {
 
   
   const handlePlaylistSelect = (playlistId) => {
-    console.log(`Selected Playlist ID: ${playlistId}`);
+    // console.log(`Selected Playlist ID: ${playlistId}`);
     setSelectedPlaylistId(playlistId);
   };
 
-  console.log("selectedPlaylistId:",selectedPlaylistId);
+  // console.log("selectedPlaylistId:",selectedPlaylistId);
   const handleClose = () => {
     setSelectedPlaylistId(null);
     setShowAddPlaylistPopup(false);
@@ -61,8 +61,8 @@ function Stream() {
       return;
     }
     setAddLoading(true);
-    console.log("videOOOOid:",videoId);
-    console.log("selectedPlaylistId:",selectedPlaylistId);
+    // console.log("videOOOOid:",videoId);
+    // console.log("selectedPlaylistId:",selectedPlaylistId);
     try {
       await addVideoInPlaylist(videoId, selectedPlaylistId);
     } catch (error) {

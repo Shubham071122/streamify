@@ -25,7 +25,7 @@ function ChannelDetail({ channel }) {
             },
           },
         );
-        console.log('CHA RSP:', response);
+        // console.log('CHA RSP:', response);
         setChannelData(response.data.data);
       } catch (error) {
         console.log('Error fetching user details:', error);
@@ -39,9 +39,9 @@ function ChannelDetail({ channel }) {
       let channelId = userId;
       fetchSubscriber(channelId, currentUserId);
     }
-    console.log('subscriberCount:', subscriberCount);
+    // console.log('subscriberCount:', subscriberCount);
   }, [userId,currentUserId]);
-console.log("sub count:",subscriberCount);
+// console.log("sub count:",subscriberCount);
   return (
     <div className='w-full'>
       {loading ? (

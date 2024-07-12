@@ -40,7 +40,7 @@ function CommentMsg({ comment, currentUserId, comments, setComments }) {
   };
   //** Toggle menu */
   const toggleMenu = () => {
-    console.log("mernuOpenBef:",menuOpen)
+    // console.log("mernuOpenBef:",menuOpen)
     setMenuOpen(!menuOpen);
   };
 
@@ -64,7 +64,7 @@ function CommentMsg({ comment, currentUserId, comments, setComments }) {
           },
         }
       );
-      console.log("Comment updated:", response);
+      // console.log("Comment updated:", response);
       // Update the comment in the UI
       const updatedCommets = comments.map((com) =>
         com._id === comment._id ? { ...com, content: updatedContent } : com
@@ -90,14 +90,14 @@ function CommentMsg({ comment, currentUserId, comments, setComments }) {
           },
         }
       );
-      console.log("Delete response: ", response);
+      // console.log("Delete response: ", response);
       const updatedCommets = comments.filter((com) => com._id !== comment._id);
       setComments(updatedCommets);
     } catch (error) {
       console.log("Error while deleting comment:", error.message);
     }
   };
-  console.log("mernuOpenAF:",menuOpen)
+  // console.log("mernuOpenAF:",menuOpen)
 
   return (
     <div className="w-full py-5 px-2 flex gap-3 border-b-2">

@@ -68,7 +68,7 @@ const PlaylistDetails = () => {
         const updatedAt = formatDate(playlistData[0].updatedAt);
         setUpdatedDate(updatedAt);
 
-        console.log('vidDetal:', videoDetails);
+        // console.log('vidDetal:', videoDetails);
         setVideos(videoDetails);
       } catch (error) {
         console.error('Error fetching playlist or video details:', error);
@@ -93,9 +93,9 @@ const PlaylistDetails = () => {
 
     try {
       const token = localStorage.getItem('token');
-      console.log('t:', token);
-      console.log(playlist.name);
-      console.log(playlist.description);
+      // console.log('t:', token);
+      // console.log(playlist.name);
+      // console.log(playlist.description);
       const response = await axios.patch(
         `${process.env.REACT_APP_SERVER_URL}/playlist/${playlistId}`,
         {
@@ -146,7 +146,7 @@ const PlaylistDetails = () => {
 
   //*HANDLE VIDEO REMOVE FROM PLAYLIST:
   const handleVideoRemove = async (videoId) => {
-    console.log(videoId);
+    // console.log(videoId);
 
     try {
       const token = localStorage.getItem('token');
@@ -159,7 +159,7 @@ const PlaylistDetails = () => {
           },
         },
       );
-      console.log(response);
+      // console.log(response);
       if (response.data && response.data.data) {
         setVideos(response.data.data.video);
         toast.success('Video removed successfully!');

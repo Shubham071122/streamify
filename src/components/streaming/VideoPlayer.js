@@ -24,7 +24,7 @@ const VideoPlayer = ({ videoId, onTogglePopup, handleOpenSharePopup }) => {
   const { viewCounts, fetchViewCount, incrementViewCount } = useVideo();
   const [viewIncremented, setViewIncremented] = useState(false);
   const [video, setVideo] = useState(null);
-  console.log('vvvv:', video);
+  // console.log('vvvv:', video);
   const channelId = video?.owner._id;
   const currentUserId = localStorage.getItem('userId');
   const [loading, setLoading] = useState(false);
@@ -57,7 +57,7 @@ const VideoPlayer = ({ videoId, onTogglePopup, handleOpenSharePopup }) => {
             },
           },
         );
-        console.log('strvid:', response);
+        // console.log('strvid:', response);
         setVideo(response.data.data);
       } catch (error) {
         console.error('Error fetching video details:', error);
@@ -125,7 +125,7 @@ const VideoPlayer = ({ videoId, onTogglePopup, handleOpenSharePopup }) => {
         toast.success('Video Like');
       }
     } catch (error) {
-      console.log('Like error:', error);
+      // console.log('Like error:', error);
       toast.error('Something Went Wrong!');
     }
   };

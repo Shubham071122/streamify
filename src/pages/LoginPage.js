@@ -24,7 +24,7 @@ const LoginPage = () => {
     setLoading(true);
     try {
       const data = await login(credentials);
-      console.log("Login successful:", data);
+      // console.log("Login successful:", data);
       navigate("/");
       toast.success("Login successfully!")
     } catch (error) {

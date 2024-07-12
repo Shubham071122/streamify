@@ -30,7 +30,7 @@ const ResetPassword = () => {
         `${process.env.REACT_APP_SERVER_URL}/users/reset-password/${token}`,
         { newPassword },
       );
-      console.log('Rt res:', response);
+      // console.log('Rt res:', response);
       setMessage('Password updated successfully!');
       toast.success('Password updated successfully!')
       setTimeout(() => navigate('/login'), 2000);

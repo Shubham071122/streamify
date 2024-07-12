@@ -50,7 +50,7 @@ function Profile() {
             },
           },
         );
-        console.log(response.data.data);
+        // console.log(response.data.data);
         if (response.data && response.data.data) {
           setUserData(response.data.data);
         }
@@ -82,16 +82,16 @@ function Profile() {
       if (name === 'coverImage') setCoverImageLoading(true);
       if (name === 'avatar') setAvatarLoading(true);
 
-      console.log('formadata:', formData.get(name));
+      // console.log('formadata:', formData.get(name));
 
       try {
         const token = localStorage.getItem('token');
-        console.log('Token:', token);
+        // console.log('Token:', token);
 
         const apiUrl = `${process.env.REACT_APP_SERVER_URL}/users/${
           name === 'coverImage' ? 'cover-image' : 'avatar'
         }`;
-        console.log('API URL:', apiUrl);
+        // console.log('API URL:', apiUrl);
 
         const response = await axios.patch(apiUrl, formData, {
           headers: {
@@ -99,7 +99,7 @@ function Profile() {
             'Content-Type': 'multipart/form-data',
           },
         });
-        console.log('res', response);
+        // console.log('res', response);
         if (response.data && response.data.data) {
           setUserData((prevData) => ({
             ...prevData,
@@ -115,7 +115,7 @@ function Profile() {
         console.log(`Error while updating ${name}:`, error);
         setError(error.message);
       } finally {
-        console.log('Inside finaly file.');
+        // console.log('Inside finaly file.');
         if (name === 'coverImage') setCoverImageLoading(false);
         if (name === 'avatar') setAvatarLoading(false);
       }
@@ -256,7 +256,7 @@ function Profile() {
           },
         },
       );
-      console.log('del Resp:', response);
+      // console.log('del Resp:', response);
       setSuccess(response.data.message);
       toast.success('Account deleted successfully!');
       if (response.data.message === 'success') {

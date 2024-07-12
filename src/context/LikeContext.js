@@ -21,7 +21,7 @@ export const LikeProvider = ({ children }) => {
           },
         },
       );
-      console.log('Like:', response);
+      // console.log('Like:', response);
       // Set the Like count in the state
       if (response.data && response.data.data) {
         setLikeCount((prevCounts) => ({
@@ -44,7 +44,7 @@ export const LikeProvider = ({ children }) => {
 
   //* TOGGLE LIKE:
   const toggleLike = async (videoId) => {
-    console.log('vid:', videoId);
+    // console.log('vid:', videoId);
     const token = localStorage.getItem('token');
 
     try {
@@ -57,7 +57,7 @@ export const LikeProvider = ({ children }) => {
           },
         },
       );
-      console.log('Like:', response);
+      // console.log('Like:', response);
       // Update the like state
       setIsLiked((prevIsLiked) => ({
         ...prevIsLiked,

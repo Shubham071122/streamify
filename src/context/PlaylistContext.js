@@ -24,7 +24,7 @@ export const PlaylistProvider = ({ children }) => {
           },
         },
       );
-      console.log('res:', response);
+      // console.log('res:', response);
       setPlaylists(response.data.data);
     } catch (error) {
       console.error('Error fetching playlists:', error);
