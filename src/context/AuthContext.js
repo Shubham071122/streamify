@@ -28,10 +28,10 @@ export const AuthProvider = ({ children }) => {
           localStorage.setItem('userId', response.data?.user._id);
           setLoading(false); // Set loading to false after checking token
         } else {
-          navigate('/login');
+          navigate('/');
         }
       } catch (error) {
-        navigate('/login');
+        navigate('/');
       }
     };
     checkAuth();
