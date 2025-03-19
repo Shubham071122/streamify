@@ -1,17 +1,17 @@
-import React, { useContext, useState } from "react";
-import AuthContext from "../context/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
-import { FaRegEye, FaRegEyeSlash, FaSpinner } from "react-icons/fa";
-import './LoginPage.css'
+import React, { useContext, useState } from 'react';
+import AuthContext from '../context/AuthContext';
+import { Link, useNavigate } from 'react-router-dom';
+import { FaRegEye, FaRegEyeSlash, FaSpinner } from 'react-icons/fa';
+import './LoginPage.css';
 import toast from 'react-hot-toast';
 
 const LoginPage = () => {
   // const backgroundImage = `url(${require("../assets/bg1.jpeg")})`;
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
-  const [credentials, setCredentials] = useState({ email: "", password: "" });
+  const [error, setError] = useState('');
+  const [credentials, setCredentials] = useState({ email: '', password: '' });
   const { login } = useContext(AuthContext);
 
   const handleChange = (e) => {
@@ -23,14 +23,17 @@ const LoginPage = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const data = await login(credentials);
-      console.log("Login successful:", data);
-      navigate("/");
-      toast.success("Login successfully!")
+      const response = await login(credentials);
+      if (response.status === 200) {
+        navigate('/');
+        toast.success('Login successfully!');
+      } else {
+        navigate('/login');
+      }
     } catch (error) {
-      setError("Login failed. Please check your credentials and try again.");
-      toast.error("Login failed,Check your credentials!")
-    }finally{
+      setError('Login failed. Please check your credentials and try again.');
+      toast.error('Login failed,Check your credentials!');
+    } finally {
       setLoading(false);
     }
   };
@@ -63,13 +66,15 @@ const LoginPage = () => {
             </label>
             <br></br>
             <input
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               name="password"
               placeholder="Password"
               value={credentials.password}
               onChange={handleChange}
               required
-              className={`px-4 py-2 w-full rounded-md outline-none mb-1 mt-1 relative ${showPassword === false ? '' : ''}`}
+              className={`px-4 py-2 w-full rounded-md outline-none mb-1 mt-1 relative ${
+                showPassword === false ? '' : ''
+              }`}
             />
 
             <button
@@ -81,23 +86,20 @@ const LoginPage = () => {
             </button>
           </div>
           <p>
-            <Link
-              to="/forgot-password"
-              className="text-blue-200 text-xs"
-            >
+            <Link to="/forgot-password" className="text-blue-200 text-xs">
               Forgot Password?
             </Link>
           </p>
-          <button className="btn w-full shadow-md flex items-center justify-center" type="submit"
-          disabled={loading}
+          <button
+            className="btn w-full shadow-md flex items-center justify-center"
+            type="submit"
+            disabled={loading}
           >
-            {
-              loading ? (
-                <FaSpinner className="animate-spin text-2xl" />  
-              ):(
-                "Sign In"
-              )
-            }
+            {loading ? (
+              <FaSpinner className="animate-spin text-2xl" />
+            ) : (
+              'Sign In'
+            )}
           </button>
           {/* {error && <p style={{ color: "red" }}>{error}</p>} */}
         </form>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import { IoMdAdd } from 'react-icons/io';
 import { useVideo } from '../../context/VideoContext';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { IoEllipsisVertical, IoPencil, IoTrash } from 'react-icons/io5';
 import Loader from '../loader/Loader';
 import { FaSpinner } from 'react-icons/fa';
 import { FaExclamationCircle } from 'react-icons/fa';
+import AuthContext from '../../context/AuthContext';
 
 function Dashboard() {
   const { channelData, fetchUserDetails } = useUserContext();
@@ -29,6 +30,7 @@ function Dashboard() {
   });
   const [newThumbnail, setNewThumbnail] = useState('');  
   const [showDeletePopup, setShowDeletePopup] = useState(false);
+  const {userData} = useContext(AuthContext);
 
   const navigate = useNavigate();
 

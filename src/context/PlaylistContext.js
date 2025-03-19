@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import AuthContext from './AuthContext';
 
 const PlaylistContext = createContext();
 
@@ -8,20 +9,18 @@ export const PlaylistProvider = ({ children }) => {
   const [playlists, setPlaylists] = useState([]);
   const [loading, setLoading] = useState(true);
   const [createLoading, setCreateLoading] = useState(false);
+  const {userData} = useContext(AuthContext);
 
   //* FETCHING ALL PLAYLISTS:
   const fetchPlaylists = async () => {
+    const userId = userData._id
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
-      const userId = localStorage.getItem('userId');
 
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/playlist/user/${userId}`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true,
         },
       );
       // console.log('res:', response);
@@ -38,7 +37,6 @@ export const PlaylistProvider = ({ children }) => {
     setCreateLoading(true);
 
     try {
-      const token = localStorage.getItem('token');
       const response = await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/playlist/`,
         {
@@ -46,9 +44,7 @@ export const PlaylistProvider = ({ children }) => {
           description: description,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true,
         },
       );
       if (response.data && response.data.data) {
@@ -67,7 +63,6 @@ export const PlaylistProvider = ({ children }) => {
   //*HANDLE ADD VIDEO IN PLAYLIST:
   const addVideoInPlaylist = async (videoId, playlistId) => {
     try {
-      const token = localStorage.getItem('token');
       const response = await axios.patch(
         `${process.env.REACT_APP_SERVER_URL}/playlist/add/${videoId}/${playlistId}`,
         {
@@ -75,9 +70,7 @@ export const PlaylistProvider = ({ children }) => {
           playlistId,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true,
         },
       );
       if (response.data && response.data.message === "Video is already in the playlist") {

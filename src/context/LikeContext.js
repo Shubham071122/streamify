@@ -10,15 +10,11 @@ export const LikeProvider = ({ children }) => {
 
   //*GETTING LIKE COUNT:
   const fetchLike = async (videoId, userId) => {
-    const token = localStorage.getItem('token');
-
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/likes/video-like/${videoId}`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true,
         },
       );
       // console.log('Like:', response);
@@ -45,16 +41,12 @@ export const LikeProvider = ({ children }) => {
   //* TOGGLE LIKE:
   const toggleLike = async (videoId) => {
     // console.log('vid:', videoId);
-    const token = localStorage.getItem('token');
-
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/likes/toggle/v/${videoId}`,
-        {}, // Empty body for the POST request
+        {}, 
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true,
         },
       );
       // console.log('Like:', response);

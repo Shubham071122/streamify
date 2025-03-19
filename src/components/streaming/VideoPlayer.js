@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useId } from 'react';
+import React, { useEffect, useState, useRef, useId, useContext } from 'react';
 import './VideoPlayer.css';
 import { FcLikePlaceholder, FcLike } from 'react-icons/fc';
 import { RiPlayListAddFill, RiShareLine } from 'react-icons/ri';
@@ -10,6 +10,7 @@ import { FaSpinner } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import { useLike } from '../../context/LikeContext';
 import { useVideo } from '../../context/VideoContext';
+import AuthContext from '../../context/AuthContext';
 
 const VideoPlayer = ({ videoId, onTogglePopup, handleOpenSharePopup }) => {
   const videoRef = useRef(null);
@@ -24,9 +25,9 @@ const VideoPlayer = ({ videoId, onTogglePopup, handleOpenSharePopup }) => {
   const { viewCounts, fetchViewCount, incrementViewCount } = useVideo();
   const [viewIncremented, setViewIncremented] = useState(false);
   const [video, setVideo] = useState(null);
-  // console.log('vvvv:', video);
-  const channelId = video?.owner._id;
-  const currentUserId = localStorage.getItem('userId');
+  const { userData } = useContext(AuthContext);
+  const [channelId, setChannelId] = useState();
+  const currentUserId = userData._id;
   const [loading, setLoading] = useState(false);
   const [subLoading, setSubLoading] = useState(false);
   const [showPlaylistName, setShowPlaylistName] = useState(false);
@@ -35,9 +36,9 @@ const VideoPlayer = ({ videoId, onTogglePopup, handleOpenSharePopup }) => {
   //* FETCHING SUBSCRIBER,LIKE,VIEW COUNT;
   useEffect(() => {
     if (!channelId) {
-      console.error('Channel ID is not available.');
       return;
     }
+
     fetchSubscriber(channelId, currentUserId);
     fetchLike(videoId, currentUserId);
     fetchViewCount(videoId);
@@ -48,17 +49,15 @@ const VideoPlayer = ({ videoId, onTogglePopup, handleOpenSharePopup }) => {
     const fetchVideoDetails = async () => {
       setLoading(true);
       try {
-        const token = localStorage.getItem('token');
         const response = await axios.get(
           `${process.env.REACT_APP_SERVER_URL}/videos/v/${videoId}`,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            withCredentials: true,
           },
         );
         // console.log('strvid:', response);
         setVideo(response.data.data);
+        setChannelId(response.data?.data?.owner._id)
       } catch (error) {
         console.error('Error fetching video details:', error);
       } finally {
@@ -250,7 +249,7 @@ const VideoPlayer = ({ videoId, onTogglePopup, handleOpenSharePopup }) => {
               <div className="w-10 h-10 flex-shrink-0 mr-4">
                 <NavLink to={`/user/${currentUserId}`}>
                   <img
-                    src={video.owner.avatar}
+                    src={video?.owner?.avatar}
                     alt=""
                     className="w-10 h-10 rounded-full object-cover object-center"
                   />
@@ -259,7 +258,7 @@ const VideoPlayer = ({ videoId, onTogglePopup, handleOpenSharePopup }) => {
 
               <div className="text-white font-medium flex-grow ">
                 <NavLink to={`/user/${currentUserId}`}>
-                  <p className="text-wrap capitalize">{video.owner.fullName}</p>
+                  <p className="text-wrap capitalize">{video?.owner?.fullName}</p>
                 </NavLink>
                 <p className="text-gray-400 text-sm">
                   {subscriberCount[channelId]}&nbsp;&nbsp;&nbsp;subscribers

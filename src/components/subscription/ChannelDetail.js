@@ -15,14 +15,11 @@ function ChannelDetail({ channel }) {
   useEffect(() => {
     const fetchUserDetails = async (userId) => {
       setLoading(true);
-      const token = localStorage.getItem('token');
       try {
         const response = await axios.get(
           `${process.env.REACT_APP_SERVER_URL}/users/${userId}`,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            withCredentials: true,
           },
         );
         // console.log('CHA RSP:', response);

@@ -33,19 +33,15 @@ const PlaylistDetails = () => {
   useEffect(() => {
     const fetchPlaylist = async () => {
       try {
-        const token = localStorage.getItem('token');
 
         const response = await axios.get(
           `${process.env.REACT_APP_SERVER_URL}/playlist/${playlistId}`,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            withCredentials: true,
           },
         );
         const playlistData = response.data.data;
-        setPlaylist(playlistData[0]); // we do [0] this because response from backed is an array.
-        // console.log(,playlistData[0].video);
+        setPlaylist(playlistData[0]); 
 
         //FETCHING VIDEO:
         const videoDetails = await Promise.all(
@@ -53,9 +49,7 @@ const PlaylistDetails = () => {
             const videoResponse = await axios.get(
               `${process.env.REACT_APP_SERVER_URL}/videos/v/${videoId}`,
               {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
+                withCredentials: true,
               },
             );
             return videoResponse.data.data;
@@ -92,7 +86,6 @@ const PlaylistDetails = () => {
     setEditLoading(true);
 
     try {
-      const token = localStorage.getItem('token');
       // console.log('t:', token);
       // console.log(playlist.name);
       // console.log(playlist.description);
@@ -103,9 +96,7 @@ const PlaylistDetails = () => {
           description: playlist.description,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true,
         },
       );
       if (response.data && response.data.data) {
@@ -125,13 +116,10 @@ const PlaylistDetails = () => {
   const handleDelete = async () => {
     setEditLoading(true);
     try {
-      const token = localStorage.getItem('token');
       const response = await axios.delete(
         `${process.env.REACT_APP_SERVER_URL}/playlist/${playlistId}`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true,
         },
       );
       if (response.data && response.data.data) {
@@ -149,14 +137,11 @@ const PlaylistDetails = () => {
     // console.log(videoId);
 
     try {
-      const token = localStorage.getItem('token');
       const response = await axios.patch(
         `${process.env.REACT_APP_SERVER_URL}/playlist/remove/${videoId}/${playlistId}`,
         {},
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true,
         },
       );
       // console.log(response);

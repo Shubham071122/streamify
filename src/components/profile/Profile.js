@@ -41,13 +41,10 @@ function Profile() {
     const fetchUserData = async () => {
       try {
         setProfileLoading(true);
-        const token = localStorage.getItem('token');
         const response = await axios.get(
           `${process.env.REACT_APP_SERVER_URL}/users/current-user`,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            withCredentials: true,
           },
         );
         // console.log(response.data.data);
@@ -85,8 +82,6 @@ function Profile() {
       // console.log('formadata:', formData.get(name));
 
       try {
-        const token = localStorage.getItem('token');
-        // console.log('Token:', token);
 
         const apiUrl = `${process.env.REACT_APP_SERVER_URL}/users/${
           name === 'coverImage' ? 'cover-image' : 'avatar'
@@ -95,8 +90,8 @@ function Profile() {
 
         const response = await axios.patch(apiUrl, formData, {
           headers: {
-            Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data',
+            withCredentials: true,
           },
         });
         // console.log('res', response);
@@ -130,7 +125,6 @@ function Profile() {
     setSuccess('');
 
     try {
-      const token = localStorage.getItem('token');
       const response = await axios.patch(
         `${process.env.REACT_APP_SERVER_URL}/users/update-account`,
         {
@@ -138,9 +132,7 @@ function Profile() {
           email: userData.email,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true,
         },
       );
 
@@ -162,16 +154,13 @@ function Profile() {
   //*VEFIFING OLD PASSWORD:
   const verifyOldPassword = async () => {
     try {
-      const token = localStorage.getItem('token');
       const response = await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/users/verify-password`,
         {
           password: passwordData.oldPassword,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true,
         },
       );
       return response.data.success;
@@ -205,7 +194,6 @@ function Profile() {
     }
 
     try {
-      const token = localStorage.getItem('token');
       const response = await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/users/change-password`,
         {
@@ -213,9 +201,7 @@ function Profile() {
           newPassword: passwordData.newPassword,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true,
         },
       );
       // console.log(response);
@@ -244,16 +230,13 @@ function Profile() {
     try {
       setDelLoading(true);
       setDelError(null);
-      const token = localStorage.getItem('token');
       const response = await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/users/delete-account`,
         {
           email: deleteEmail,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true,
         },
       );
       // console.log('del Resp:', response);

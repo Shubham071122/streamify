@@ -9,22 +9,18 @@ export const VideoProvider = ({ children }) => {
   const [errors, setErrors] = useState('');
   const [loading, setLoading] = useState(false);
   const [viewCounts, setViewCounts] = useState({});
-  const [userVideos,setUserVideos] = useState([]);
+  const [userVideos, setUserVideos] = useState([]);
 
   //* FETCHING VIDEO FOR HOME SCREEN:
   const fetchVideos = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/videos/`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true,
         },
       );
-      //   console.log("Res vid:",response);
       if (response.data && response.data.message.videos) {
         setVideos(response.data.message.videos);
       }
@@ -40,16 +36,12 @@ export const VideoProvider = ({ children }) => {
   const fetchVideoByQuery = async (query) => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/videos/search?query=${query}`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true,
         },
       );
-      // console.log('Res vid:', response);
       if (response.data && response.data.message.videos) {
         setVideos(response.data.message.videos);
       }
@@ -63,14 +55,11 @@ export const VideoProvider = ({ children }) => {
 
   //*FETCHING VIDEO VIEW COUNT:
   const fetchViewCount = async (videoId) => {
-    const token = localStorage.getItem("token");
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/videos/view-count/${videoId}`,
         {
-          headers:{
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true,
         },
       );
 
@@ -86,12 +75,13 @@ export const VideoProvider = ({ children }) => {
   //*INCREMENTING VIDEO VIEW COUNT:
   const incrementViewCount = async (videoId) => {
     try {
-      const token = localStorage.getItem('token');
-      await axios.patch(`${process.env.REACT_APP_SERVER_URL}/videos/view/${videoId}`, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      await axios.patch(
+        `${process.env.REACT_APP_SERVER_URL}/videos/view/${videoId}`,
+        {},
+        {
+          withCredentials: true,
         },
-      });
+      );
 
       // Increment local view count
       setViewCounts((prevCounts) => ({
@@ -105,28 +95,24 @@ export const VideoProvider = ({ children }) => {
 
   //* FETCHING USER VIDEO FOR DASHBOARD:
   const fetchUserVideos = async () => {
-    const token = localStorage.getItem("token");
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/videos/user-videos`,
         {
-          headers:{
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true,
         },
-      )
+      );
       // console.log("Usevideos:",response);
-      if(response.data && response.data.data){
+      if (response.data && response.data.data) {
         setUserVideos(response.data.data);
       }
     } catch (error) {
-      console.log("Error fetching user videos:",error);
+      console.log('Error fetching user videos:', error);
     }
-  }
+  };
 
   //* UPDATE USER VIDEO:
-  const updateUserVideo = async(videoId,formData) => {
-    const token = localStorage.getItem("token");
+  const updateUserVideo = async (videoId, formData) => {
     try {
       const response = await axios.patch(
         `${process.env.REACT_APP_SERVER_URL}/videos/update-video/${videoId}`,
@@ -136,48 +122,54 @@ export const VideoProvider = ({ children }) => {
           thumbnail: formData.thumbnail,
         },
         {
-          headers:{
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          }
-        }
-      )
-      if(response.data && response.data.data){
+          withCredentials: true,
+        },
+      );
+      if (response.data && response.data.data) {
         // console.log("UpdatedUserVideo:",response);
-        toast.success("Video updated successful!")
+        toast.success('Video updated successful!');
       }
     } catch (error) {
-      console.log("Error while updating video:",error);
-      toast.error("Something went wrong!");
+      console.log('Error while updating video:', error);
+      toast.error('Something went wrong!');
     }
   };
 
-
   //* DELETE USER VIDEO:
-  const deleteUserVideo = async(videoId) => {
-    const token = localStorage.getItem("token");
+  const deleteUserVideo = async (videoId) => {
     try {
       const response = await axios.delete(
         `${process.env.REACT_APP_SERVER_URL}/videos/delete-video/${videoId}`,
         {
-          headers:{
-            Authorization: `Bearer ${token}`,
-          }
-        }
-      )
-      if(response.data && response.data.data){
+          withCredentials: true,
+        },
+      );
+      if (response.data && response.data.data) {
         // console.log("UpdatedUserVideo:",response);
-        toast.success("Video deleted successful!")
+        toast.success('Video deleted successful!');
       }
     } catch (error) {
-      console.log("Error while updating video:",error);
-      toast.error("Something went wrong!");
+      console.log('Error while updating video:', error);
+      toast.error('Something went wrong!');
     }
   };
 
   return (
     <VideoContext.Provider
-      value={{ videos, errors, loading,viewCounts, userVideos, fetchVideos, fetchVideoByQuery,fetchViewCount,  incrementViewCount, fetchUserVideos, updateUserVideo,deleteUserVideo }}
+      value={{
+        videos,
+        errors,
+        loading,
+        viewCounts,
+        userVideos,
+        fetchVideos,
+        fetchVideoByQuery,
+        fetchViewCount,
+        incrementViewCount,
+        fetchUserVideos,
+        updateUserVideo,
+        deleteUserVideo,
+      }}
     >
       {children}
     </VideoContext.Provider>

@@ -43,19 +43,23 @@ function RegisterPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     if (!validateForm()) {
-      toast.error('Please fill all required fields, including Avatar,CoverImage');
+      toast.error(
+        'Please fill all required fields, including Avatar,CoverImage',
+      );
       setLoading(false);
       return;
-    };
+    }
     try {
       const response = await register(formData);
       // console.log('register res:', response);
-      toast.success('Accout created successfully!');
-      navigate('/login');
+      if (response.status === 200) {
+        navigate('/login');
+        toast.success('Accout created successfully!');
+      }
     } catch (error) {
       console.log('Error while creating:', error);
       toast.error('Something went wrong!');
@@ -77,10 +81,10 @@ function RegisterPage() {
         <p className="text-center text-[20px] font-medium text-white mb-10">
           India's no.1 video Streaimg platform
         </p>
-        <div >
-          <div className='mb-5'>
+        <div>
+          <div className="mb-5">
             <label className="text-white text-base" htmlFor="fullName">
-               Name
+              Name
             </label>
             <input
               type="text"
@@ -91,10 +95,12 @@ function RegisterPage() {
               required
               className="px-4 py-2 w-full rounded-md outline-none mt-1"
             />
-            {errors.fullName && <span  className="text-red-500 italic">{errors.fullName}</span>}
+            {errors.fullName && (
+              <span className="text-red-500 italic">{errors.fullName}</span>
+            )}
           </div>
 
-          <div className='mb-5'>
+          <div className="mb-5">
             <label className="text-white text-base" htmlFor="email">
               Email
             </label>
@@ -107,10 +113,12 @@ function RegisterPage() {
               required
               className="px-4 py-2 w-full rounded-md outline-none mt-1"
             />
-            {errors.email && <span className="text-red-500 italic">{errors.email}</span>}
+            {errors.email && (
+              <span className="text-red-500 italic">{errors.email}</span>
+            )}
           </div>
 
-          <div className='mb-5'>
+          <div className="mb-5">
             <label className="text-white text-base" htmlFor="username">
               Username
             </label>
@@ -123,7 +131,9 @@ function RegisterPage() {
               required
               className="px-4 py-2 w-full rounded-md outline-none mt-1"
             />
-            {errors.username && <span className="text-red-500 italic">{errors.username}</span>}
+            {errors.username && (
+              <span className="text-red-500 italic">{errors.username}</span>
+            )}
           </div>
 
           <div className="w-full relative mb-5">
@@ -139,7 +149,9 @@ function RegisterPage() {
               required
               className="px-4 py-2 w-full rounded-md outline-none mt-1 relative"
             />
-            {errors.password && <span className="text-red-500 italic">{errors.password}</span>}
+            {errors.password && (
+              <span className="text-red-500 italic">{errors.password}</span>
+            )}
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
@@ -172,7 +184,9 @@ function RegisterPage() {
                 required
               />
             </div>
-            {errors.avatar && <span className="text-red-500 italic">{errors.avatar}</span>}
+            {errors.avatar && (
+              <span className="text-red-500 italic">{errors.avatar}</span>
+            )}
           </div>
 
           <label
@@ -201,10 +215,17 @@ function RegisterPage() {
                 required
               />
             </div>
-            {errors.coverImage && <span className="text-red-500 italic">{errors.coverImage}</span>}
+            {errors.coverImage && (
+              <span className="text-red-500 italic">{errors.coverImage}</span>
+            )}
           </div>
 
-          <button className="btn w-full" type="submit" onClick={handleSubmit} disabled={loading}>
+          <button
+            className="btn w-full"
+            type="submit"
+            onClick={handleSubmit}
+            disabled={loading}
+          >
             {loading ? 'Creating...' : 'Register'}
           </button>
         </div>
@@ -217,9 +238,7 @@ function RegisterPage() {
         </div>
       </div>
     </div>
-
-
-);
+  );
 }
 
 export default RegisterPage;

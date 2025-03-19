@@ -1,9 +1,10 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import CommentMsg from './CommentMsg';
-import './Comment.css';
+import React, { useContext, useEffect, useState } from 'react';
 import { IoSend } from 'react-icons/io5';
 import FetchLoader from '../loader/FetchLoader.';
+import './Comment.css';
+import CommentMsg from './CommentMsg';
+import AuthContext from '../../context/AuthContext';
 
 function Comment({ videoId }) {
   const [comments, setComments] = useState([]);
@@ -11,22 +12,20 @@ function Comment({ videoId }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [loadingComment, setLoadingComment] = useState(true);
+  const { userData } = useContext(AuthContext);
 
   //fetching userId form local storage.
-  const currentUserId = localStorage.getItem('userId');
+  const currentUserId = userData._id;
   // console.log("currentUserId:",currentUserId)
 
   useEffect(() => {
     const fetchComments = async () => {
-      const token = localStorage.getItem('token');
       setLoadingComment(true);
       try {
         const response = await axios.get(
           `${process.env.REACT_APP_SERVER_URL}/comments/${videoId}`,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            withCredentials: true,
           },
         );
 
@@ -55,7 +54,6 @@ function Comment({ videoId }) {
   //* POST COMMENT:---
   const postComment = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
 
     setLoading(true); // Start loading
     setError(''); // Clear previous errors
@@ -67,9 +65,7 @@ function Comment({ videoId }) {
           comment: commentMsg,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true,
         },
       );
 
@@ -81,9 +77,7 @@ function Comment({ videoId }) {
         const updatedResponse = await axios.get(
           `${process.env.REACT_APP_SERVER_URL}/comments/${videoId}`,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            withCredentials: true,
           },
         );
 
@@ -117,7 +111,7 @@ function Comment({ videoId }) {
         <div className="w-full h-full px-3 py-3 flex flex-col overflow-y-auto comment-section grow">
           {loadingComment ? (
             <div className="w-full h-full">
-              <FetchLoader/>
+              <FetchLoader />
             </div>
           ) : comments && comments.length > 0 ? (
             comments.map((comment) => {

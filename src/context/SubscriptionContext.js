@@ -7,19 +7,15 @@ export const SubscriptionProvider = ({ children }) => {
   const [subscriberCount, setSubscriberCount] = useState({});
   const [isSubscribed, setIsSubscribed] = useState({});
   const [buttonClicked, setButtonClicked] = useState(false);
-  const [subscribedChannels,setSubscribedChannels] = useState([]);
+  const [subscribedChannels, setSubscribedChannels] = useState([]);
 
   //*GETTING SUBSCRIBER COUNT:
-  const fetchSubscriber = async (channelId,currentUserId) => {
-    const token = localStorage.getItem('token');
-    // console.log("token:",token);
+  const fetchSubscriber = async (channelId, currentUserId) => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/subscriptions/c/${channelId}`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true,
         },
       );
       // console.log('Subscriber:', response);
@@ -47,24 +43,19 @@ export const SubscriptionProvider = ({ children }) => {
 
   //* TOGGLE SUBSCRIBER
   const toggleSubscription = async (channelId) => {
-    const token = localStorage.getItem('token');
-
-    // console.log('token:', token);
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/subscriptions/c/${channelId}`,
         {}, // Empty body for the POST request
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true,
         },
       );
       // console.log('subscribed:', response);
       // Toggle the subscription state
       setIsSubscribed((prevIsSubscribed) => {
         const newIsSubscribed = !prevIsSubscribed[channelId];
-        
+
         // Update the subscriber count
         setSubscriberCount((prevCount) => ({
           ...prevCount,
@@ -72,14 +63,14 @@ export const SubscriptionProvider = ({ children }) => {
             ? prevCount[channelId] + 1
             : prevCount[channelId] - 1,
         }));
-        
+
         return {
           ...prevIsSubscribed,
           [channelId]: newIsSubscribed,
         };
       });
 
-      setButtonClicked(true);// Hanling ui of button
+      setButtonClicked(true); // Hanling ui of button
       setTimeout(() => setButtonClicked(false), 1000); // Remove class after animation
     } catch (error) {
       console.log('Error while toggle subscription:', error);
@@ -87,16 +78,12 @@ export const SubscriptionProvider = ({ children }) => {
   };
 
   //* GETTING SUBSCRIBED CHANNELS LIST:
-  const fetchSubscribedChannels = async(currentUserId) => {
-    const token = localStorage.getItem("token");
-
+  const fetchSubscribedChannels = async (currentUserId) => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/subscriptions/u/${currentUserId}`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true,
         },
       );
       // console.log("Channels res:",response);
@@ -105,9 +92,9 @@ export const SubscriptionProvider = ({ children }) => {
         setSubscribedChannels(response.data.data);
       }
     } catch (error) {
-      console.log("Error while fetching channels:",error);
+      console.log('Error while fetching channels:', error);
     }
-  }
+  };
 
   return (
     <SubscriptionContext.Provider
@@ -118,7 +105,7 @@ export const SubscriptionProvider = ({ children }) => {
         buttonClicked,
         fetchSubscriber,
         toggleSubscription,
-        fetchSubscribedChannels
+        fetchSubscribedChannels,
       }}
     >
       {children}

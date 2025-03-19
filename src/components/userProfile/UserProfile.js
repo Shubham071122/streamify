@@ -1,15 +1,20 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useUserContext } from '../../context/UserContext';
 import { useSubscription } from '../../context/SubscriptionContext';
 import { useVideo } from '../../context/VideoContext';
 import { useNavigate } from 'react-router-dom';
+import AuthContext from '../../context/AuthContext';
 
 function UserProfile() {
     const {channelData,fetchUserDetails} = useUserContext();
     const { subscriberCount,fetchSubscriber } = useSubscription();
     const {userVideos, fetchUserVideos} = useVideo();
+    const {userData} = useContext(AuthContext);
     const navigate = useNavigate();
-    const userId = localStorage.getItem('userId');
+
+
+    const userId = userData._id;
+
     useEffect(() => {
         fetchUserDetails(userId);
         fetchSubscriber(userId,userId);

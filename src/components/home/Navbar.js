@@ -5,6 +5,7 @@ import logo from "../../assets/Streamify.png";
 import { NavLink } from 'react-router-dom';
 import './Navbar.css'
 import { useVideo } from '../../context/VideoContext';
+import axios from 'axios';
 
 function Navbar() {
   // const [erros,setErrors] = useState();
@@ -15,18 +16,13 @@ function Navbar() {
   useEffect(() => {
     const fetchAvatar = async() => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(
+        const response = await axios.get(
           `${process.env.REACT_APP_SERVER_URL}/users/current-user`,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            withCredentials: true,
           }
         );
-        // console.log("Response avatar: ",response);
-        const data = await response.json();
-        setAvatar(data.data.avatar);
+        setAvatar(response.data?.data.avatar);
         // console.log("Avatar:",data.data);
         
       } catch (error) {
