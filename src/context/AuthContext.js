@@ -29,9 +29,11 @@ export const AuthProvider = ({ children }) => {
           setLoading(false); // Set loading to false after checking token
         } else {
           navigate('/');
+          setLoading(false);
         }
       } catch (error) {
         navigate('/');
+        setLoading(false);
       }
     };
     checkAuth();
@@ -52,6 +54,7 @@ export const AuthProvider = ({ children }) => {
         setUserData(response.data?.data.user);
         localStorage.setItem('userId', response.data?.data.user._id);
         setIsAuthenticated(true);
+        setLoading(false);
       }
 
       // console.log('Data user: ', response);
@@ -59,6 +62,7 @@ export const AuthProvider = ({ children }) => {
       return response;
     } catch (error) {
       console.error('Error logging in: ', error);
+      setLoading(false);
       throw error;
     }
   };
